@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:visibility="gone" />
+
+            <RadioGroup
+                android:id="@+id/main_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#008DE1"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/rbb1"
+                    style="@style/mainTabs_radio"
+                    android:drawableTop="@drawable/radio_button1_dh"
+                    android:text="外卖" />
+
+                <RadioButton
+                    android:id="@+id/rbb2"
+                    style="@style/mainTabs_radio"
+                    android:drawableTop="@drawable/radio_button2_dh"
+                    android:text="订单" />
+
+                <RadioButton
+                    android:id="@+id/rbb3"
+                    style="@style/mainTabs_radio"
+                    android:drawableTop="@drawable/radio_button4_dh"
+                    android:text="发现" />
+
+                <RadioButton
+                    android:id="@+id/rbb4"
+                    style="@style/mainTabs_radio"
+                    android:drawableTop="@drawable/radio_button3_dh"
+                    android:text="我的" />
+            </RadioGroup>
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>
