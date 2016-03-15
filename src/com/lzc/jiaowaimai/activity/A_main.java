@@ -9,6 +9,7 @@ import android.view.Window;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TabHost;
+import pl.com.salsoft.sqlitestudioremote.SQLiteStudioService;
 
 @SuppressWarnings("deprecation")
 public class A_main extends TabActivity implements OnCheckedChangeListener
@@ -18,11 +19,21 @@ public class A_main extends TabActivity implements OnCheckedChangeListener
 	private RadioGroup mRadioGroup;
 
 	@Override
+	protected void onDestroy()
+	{
+		SQLiteStudioService.instance().stop();
+		super.onDestroy();
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.a00_main);
+ 
+		SQLiteStudioService.instance().start(getApplicationContext());
+
 		mTabHost = getTabHost();
 		mTabHost.setup();
 

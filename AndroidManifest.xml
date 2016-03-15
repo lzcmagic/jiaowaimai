@@ -24,13 +24,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.lzc.jiaowaimai.activity.C_WaiMai" >
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.C_WaiMai"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.lzc.jiaowaimai.activity.D_DingDan" >
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.D_DingDan"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.lzc.jiaowaimai.activity.E_FaXian" >
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.E_FaXian"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.lzc.jiaowaimai.activity.F_XinXi" >
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.F_XinXi"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

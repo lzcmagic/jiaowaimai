@@ -4,7 +4,6 @@ import com.lzc.jiaowaimai.R;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ public class D_DingDan extends Activity
 	/** 记录按下返回键的时间 */
 	private long exitTime = 0;
 
+	/** 订单的ListView */
 	private ListView mListView;
 
 	@Override
@@ -40,14 +40,17 @@ public class D_DingDan extends Activity
 
 	}
 
+	/** 自定义的Adapter */
 	private class MyListAdapter extends BaseAdapter
 	{
-		private Context mContext;
+		private LayoutInflater mInflater;
+		
+		private ListView contentListView;
 
 		public MyListAdapter(Context mContext)
 		{
-			super();
-			this.mContext = mContext;
+			this.mInflater = LayoutInflater.from(mContext);
+			contentListView=(ListView) findViewById(R.id.di03);
 		}
 
 		@Override
@@ -71,20 +74,37 @@ public class D_DingDan extends Activity
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.d10_list_item, null);
-			if (convertView != null )
+			ViewHoilder hold = null;
+			if (convertView == null )
 			{
-				ImageView imageView = (ImageView) findViewById(R.id.di01);
-				TextView textView = (TextView) findViewById(R.id.di02);
-				ListView listView = (ListView) findViewById(R.id.di03);
-				TextView textView2 = (TextView) findViewById(R.id.di04);
-				TextView textView3 = (TextView) findViewById(R.id.di05);
-				Button button = (Button) findViewById(R.id.di06);
+				hold = new ViewHoilder();
+				convertView = mInflater.inflate(R.layout.d10_list_item, null);
+				hold.txImage = (ImageView) convertView.findViewById(R.id.di01);
+				hold.nameText = (TextView) convertView.findViewById(R.id.di02);
+				hold.numText = (TextView) convertView.findViewById(R.id.di04);
+				hold.moneyText = (TextView) convertView.findViewById(R.id.di05);
+				hold.contentList = (ListView) convertView.findViewById(R.id.di03);
+				hold.againButton = (Button) findViewById(R.id.di06);
+				convertView.setTag(hold);
+			}
+			else
+			{
+				hold = (ViewHoilder) convertView.getTag();
 			}
 
 			return convertView;
 		}
 
+	}
+
+	class ViewHoilder
+	{
+		public ImageView txImage;
+		public TextView nameText;
+		public TextView numText;
+		public TextView moneyText;
+		public ListView contentList;
+		public Button againButton;
 	}
 
 	@Override

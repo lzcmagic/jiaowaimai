@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -79,6 +80,13 @@ public class C_WaiMai extends Activity
 		super.onDestroy();
 	}
 
+	@Override
+	protected void onResume()
+	{
+		new SQLiteDao(getApplicationContext());
+		super.onResume();
+	}
+
 	/**
 	 * 外卖调研：北京烤鸭，兰州拉面，沙县小吃，黄焖鸡，重庆小面，一号水果摊，梦甜蛋糕店，粤仔湾，肯德基，
 	 */
@@ -87,8 +95,9 @@ public class C_WaiMai extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.c00_waimai);
-		initViews();
-		new Thread(new Runnable()
+		initDate();
+		initViewPagerView();
+		Thread thread = new Thread(new Runnable()
 		{
 
 			@Override
@@ -107,11 +116,26 @@ public class C_WaiMai extends Activity
 					}
 				}
 			}
-		}).start();
+		});
+		thread.start();
+
+		initOtherViews();
+	}
+
+	/** 初始化其他界面 */
+	private void initOtherViews()
+	{
+
+	}
+
+	/** 初始化spinner的数据 */
+	private void initDate()
+	{
+
 	}
 
 	@SuppressWarnings("deprecation")
-	private void initViews()
+	private void initViewPagerView()
 	{
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mLayout = (LinearLayout) findViewById(R.id.ll_pagerview);
@@ -119,7 +143,7 @@ public class C_WaiMai extends Activity
 		mViewPager.setAdapter(new MyPagerAdapter());
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
 		{
-
+ 
 			@Override
 			public void onPageSelected(int position)
 			{

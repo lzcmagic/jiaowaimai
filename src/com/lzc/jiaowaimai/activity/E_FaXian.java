@@ -22,6 +22,7 @@ public class E_FaXian extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.e00_faxian);
 		mWebView = (WebView) findViewById(R.id.wv_faxin);
+		mWebView.setBackgroundResource(R.drawable.ic_launcher);
 		init();
 	}
 
