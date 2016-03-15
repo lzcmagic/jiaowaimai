@@ -2,5 +2,6 @@
 <lint>
     <issue id="HandlerLeak" severity="ignore" />
     <issue id="InflateParams" severity="ignore" />
+    <issue id="NewApi" severity="ignore" />
     <issue id="SetJavaScriptEnabled" severity="ignore" />
 </lint>

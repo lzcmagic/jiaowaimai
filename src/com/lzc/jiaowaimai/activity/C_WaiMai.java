@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
+import com.lzc.jiaowaimai.activity.utils.MyToast;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -16,9 +17,13 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class C_WaiMai extends Activity
@@ -36,6 +41,12 @@ public class C_WaiMai extends Activity
 	 * 广告条显示的图片集合
 	 */
 	private List<ImageView> mImageViews;
+
+	private Spinner typeSpinner;
+	private Spinner hotSpinner;
+
+	private List<String> typeList;
+	private List<String> hotList;
 
 	/**
 	 * 处理UI线程中的图片自动轮播问题
@@ -125,13 +136,76 @@ public class C_WaiMai extends Activity
 	/** 初始化其他界面 */
 	private void initOtherViews()
 	{
+		// 种类
+		typeSpinner = (Spinner) findViewById(R.id.s_type);
+		ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, typeList);
+		typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		typeSpinner.setAdapter(typeAdapter);
+		typeSpinner.setOnItemSelectedListener(new TypeOnItemClickListener());
+
+		// 排序
+		hotSpinner = (Spinner) findViewById(R.id.s_hot);
+		ArrayAdapter<String> hotAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
+				hotList);
+		hotAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		hotSpinner.setAdapter(hotAdapter);
+		hotSpinner.setOnItemSelectedListener(new SortOnItemClickListener());
+	}
+
+	/** 按热度排序 */
+	private class SortOnItemClickListener implements OnItemSelectedListener
+	{
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+		{
+
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent)
+		{
+
+		}
+
+	}
+
+	/** 按种类筛选 */
+	private class TypeOnItemClickListener implements OnItemSelectedListener
+	{
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+		{
+			MyToast.show((String) parent.getSelectedItem(), getApplicationContext());
+
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent)
+		{
+			
+		}
 
 	}
 
 	/** 初始化spinner的数据 */
 	private void initDate()
 	{
+		typeList = new ArrayList<String>();
+		typeList.add("分类");
+		typeList.add("快餐");
+		typeList.add("正餐");
+		typeList.add("小吃零食");
+		typeList.add("果蔬生鲜");
 
+		hotList = new ArrayList<String>();
+		hotList.add("排序");
+		hotList.add("销量最高");
+		hotList.add("评分最高");
+		hotList.add("起送价最低");
+		hotList.add("配送速度最快");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -143,7 +217,7 @@ public class C_WaiMai extends Activity
 		mViewPager.setAdapter(new MyPagerAdapter());
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener()
 		{
- 
+
 			@Override
 			public void onPageSelected(int position)
 			{

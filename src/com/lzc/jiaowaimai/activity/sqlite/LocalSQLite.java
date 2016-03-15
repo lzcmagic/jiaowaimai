@@ -28,7 +28,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		db.execSQL(
 				"create table ordermeal_info(mealid text primary key,restaurantname text,mealname text,mealnum integer,mealmoney integer,restaurantid text);");
 		db.execSQL(
-				"create table restaurant_info(restaurantid text primary key,resphone text,restype text,resaddressid text,menuid text);");
+				"create table restaurant_info(restaurantid text primary key,resphone text,restype text,runspeed text,startrunmoney integer,sales text,score text,resaddressid text,menuid text);");
 		db.execSQL(
 				"create table menu_info (menuid text primary key,type1 text,type2 text,type3 text,type4 text,type5 text,type6 text,type7 text,type8 text,type9 text,type10 text,type11 text,type12 text,type13 text,type14 text,type15 text,type16 text,type17 text,type18 text,type19 text,type20 text);");
 		db.execSQL(
@@ -41,7 +41,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		initTable_Menu_Info();
 		initTable_Resaddress_Info();
 	}
- 
+
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
