@@ -40,6 +40,10 @@
             android:name="com.lzc.jiaowaimai.activity.F_XinXi"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.Ca_DisPlayPage"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

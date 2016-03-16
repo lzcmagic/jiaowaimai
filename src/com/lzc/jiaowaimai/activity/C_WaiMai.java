@@ -8,22 +8,29 @@ import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 import com.lzc.jiaowaimai.activity.utils.MyToast;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class C_WaiMai extends Activity
@@ -42,11 +49,17 @@ public class C_WaiMai extends Activity
 	 */
 	private List<ImageView> mImageViews;
 
+	/** 按种类排序的Spinner */
 	private Spinner typeSpinner;
+	/** 按热度排序的Spinner */
 	private Spinner hotSpinner;
-
+	/** 种类的集合 */
 	private List<String> typeList;
+	/** 热度的集合 */
 	private List<String> hotList;
+
+	/** 参观的ListView */
+	private ListView mListView;
 
 	/**
 	 * 处理UI线程中的图片自动轮播问题
@@ -106,7 +119,7 @@ public class C_WaiMai extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.c00_waimai);
-		initDate();
+		initSpinnerDate();
 		initViewPagerView();
 		Thread thread = new Thread(new Runnable()
 		{
@@ -133,65 +146,43 @@ public class C_WaiMai extends Activity
 		initOtherViews();
 	}
 
-	/** 初始化其他界面 */
-	private void initOtherViews()
+	/** 初始化数据 */
+	private void initData()
 	{
-		// 种类
-		typeSpinner = (Spinner) findViewById(R.id.s_type);
-		ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, typeList);
-		typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		typeSpinner.setAdapter(typeAdapter);
-		typeSpinner.setOnItemSelectedListener(new TypeOnItemClickListener());
-
-		// 排序
-		hotSpinner = (Spinner) findViewById(R.id.s_hot);
-		ArrayAdapter<String> hotAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-				hotList);
-		hotAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		hotSpinner.setAdapter(hotAdapter);
-		hotSpinner.setOnItemSelectedListener(new SortOnItemClickListener());
-	}
-
-	/** 按热度排序 */
-	private class SortOnItemClickListener implements OnItemSelectedListener
-	{
-
-		@Override
-		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+		int[] images = new int[]
 		{
-
-		}
-
-		@Override
-		public void onNothingSelected(AdapterView<?> parent)
+			R.drawable.a,
+			R.drawable.b,
+			R.drawable.c,
+			R.drawable.d
+		};
+		mImageViews = new ArrayList<ImageView>();
+		ImageView iv;
+		View v;
+		LayoutParams params;
+		// 初始化图片集合的内容
+		for (int i = 0; i < images.length; i++)
 		{
+			iv = new ImageView(this);
+			iv.setBackgroundResource(images[i]);
+			mImageViews.add(iv);
 
+			// 每循环一次需要向LinearLayout一个点的View对象
+			v = new View(this);
+			v.setBackgroundResource(R.drawable.point_bg);
+			params = new LayoutParams(6, 6);
+			if (i != 0 )
+			{
+				params.leftMargin = 10;
+			}
+			v.setLayoutParams(params);
+			v.setEnabled(false);
+			mLayout.addView(v);
 		}
-
-	}
-
-	/** 按种类筛选 */
-	private class TypeOnItemClickListener implements OnItemSelectedListener
-	{
-
-		@Override
-		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-		{
-			MyToast.show((String) parent.getSelectedItem(), getApplicationContext());
-
-		}
-
-		@Override
-		public void onNothingSelected(AdapterView<?> parent)
-		{
-			
-		}
-
 	}
 
 	/** 初始化spinner的数据 */
-	private void initDate()
+	private void initSpinnerDate()
 	{
 		typeList = new ArrayList<String>();
 		typeList.add("分类");
@@ -252,41 +243,155 @@ public class C_WaiMai extends Activity
 		mViewPager.setCurrentItem(currentPosition);
 	}
 
-	/** 初始化数据 */
-	private void initData()
+	/** 初始化其他界面 */
+	private void initOtherViews()
 	{
-		int[] images = new int[]
-		{
-			R.drawable.a,
-			R.drawable.b,
-			R.drawable.c,
-			R.drawable.d
-		};
-		mImageViews = new ArrayList<ImageView>();
-		ImageView iv;
-		View v;
-		LayoutParams params;
-		// 初始化图片集合的内容
-		for (int i = 0; i < images.length; i++)
-		{
-			iv = new ImageView(this);
-			iv.setBackgroundResource(images[i]);
-			mImageViews.add(iv);
+		// 种类
+		typeSpinner = (Spinner) findViewById(R.id.s_type);
+		ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, typeList);
+		typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		typeSpinner.setAdapter(typeAdapter);
+		typeSpinner.setOnItemSelectedListener(new TypeOnItemClickListener());
 
-			// 每循环一次需要向LinearLayout一个点的View对象
-			v = new View(this);
-			v.setBackgroundResource(R.drawable.point_bg);
-			params = new LayoutParams(6, 6);
-			if (i != 0 )
-			{
-				params.leftMargin = 10;
-			}
-			v.setLayoutParams(params);
-			v.setEnabled(false);
-			mLayout.addView(v);
-		}
+		// 排序
+		hotSpinner = (Spinner) findViewById(R.id.s_hot);
+		ArrayAdapter<String> hotAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
+				hotList);
+		hotAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		hotSpinner.setAdapter(hotAdapter);
+		hotSpinner.setOnItemSelectedListener(new SortOnItemClickListener());
+
+		// 餐馆的ListView
+		mListView = (ListView) findViewById(R.id.lv_index);
+		mListView.setAdapter(new IndexAdapter(getApplicationContext()));
+
+		mListView.setOnItemClickListener(new ListViewItemClickListener());
 	}
 
+	/** listView点击事件 */
+	private class ListViewItemClickListener implements OnItemClickListener
+	{
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+		{
+			Intent intent = new Intent();
+			intent.setClass(getApplicationContext(), Ca_DisPlayPage.class);
+			
+			startActivity(intent);
+		}
+
+	}
+
+	class ViewHolder
+	{
+		/** 商户头像 */
+		ImageView tx_image;
+		/** 商户名字 */
+		TextView name_text;
+		/** 商户起送价 */
+		TextView qisongjia_text;
+		/** 商户配送费 */
+		TextView peisongfei_text;
+		/** 月销售单数 */
+		TextView num_text;
+		/** 商户评分 */
+		TextView fenshu_text;
+	}
+
+	/** 主页ListView的适配器 */
+	private class IndexAdapter extends BaseAdapter
+	{
+
+		LayoutInflater mInflater;
+
+		public IndexAdapter(Context contex)
+		{
+			this.mInflater = LayoutInflater.from(contex);
+		}
+
+		@Override
+		public int getCount()
+		{
+			return 5;
+		}
+
+		@Override
+		public Object getItem(int position)
+		{
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position)
+		{
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
+			ViewHolder holder = null;
+			if (convertView == null )
+			{
+				holder = new ViewHolder();
+				convertView = mInflater.inflate(R.layout.index_list_view, null);
+				holder.tx_image = (ImageView) convertView.findViewById(R.id.index_iv);
+				holder.name_text = (TextView) convertView.findViewById(R.id.index_name);
+				holder.qisongjia_text = (TextView) convertView.findViewById(R.id.tv_price);
+				holder.peisongfei_text = (TextView) convertView.findViewById(R.id.tv_peisongfei);
+				holder.num_text = (TextView) convertView.findViewById(R.id.tv_danshu);
+				holder.fenshu_text = (TextView) findViewById(R.id.tv_fenshu);
+				convertView.setTag(holder);
+			}
+			else
+			{
+				holder = (ViewHolder) convertView.getTag();
+			}
+			return convertView;
+		}
+
+	}
+
+	/** 按热度排序 */
+	private class SortOnItemClickListener implements OnItemSelectedListener
+	{
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+		{
+
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent)
+		{
+
+		}
+
+	}
+
+	/** 按种类筛选 */
+	private class TypeOnItemClickListener implements OnItemSelectedListener
+	{
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+		{
+			MyToast.show((String) parent.getSelectedItem(), getApplicationContext());
+
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent)
+		{
+
+		}
+
+	}
+
+	/** PagerAdapter的适配器 */
 	private class MyPagerAdapter extends PagerAdapter
 	{
 
