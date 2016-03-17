@@ -24,7 +24,7 @@ public class SQLiteDao
 	/** Вщев */
 	public static void query()
 	{
-
+		
 	}
 
 	/***/

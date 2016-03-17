@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:background="#ffffff"
+            android:background="@drawable/m_select"
             android:gravity="center"
             android:text="商品"
             android:textSize="16sp" />
@@ -130,6 +130,7 @@
         android:background="#77333333" >
 
         <ImageView
+            android:id="@+id/ca_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"

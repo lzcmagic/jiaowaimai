@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.sqlite.LocalSQLite;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 import com.lzc.jiaowaimai.activity.utils.MyToast;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -35,34 +40,36 @@ import android.widget.Toast;
 
 public class C_WaiMai extends Activity
 {
-	/** ¼ÇÂ¼°´ÏÂ·µ»Ø¼üµÄÊ±¼ä */
+	/** è®°å½•æŒ‰ä¸‹è¿”å›é”®çš„æ—¶é—´ */
 	private long exitTime = 0;
 	private ViewPager mViewPager;
 	private LinearLayout mLayout;
 	private int lastPosition = 0;
 
-	/** ÊÇ·ñ¹Ø±ÕÏß³ÌµÄ±êÖ¾Î»£¬Ä¬ÈÏÎªfalse:²»¹Ø±Õ */
+	private List<IndexShow> sqlList;
+
+	/** æ˜¯å¦å…³é—­çº¿ç¨‹çš„æ ‡å¿—ä½ï¼Œé»˜è®¤ä¸ºfalse:ä¸å…³é—­ */
 	private boolean isStop;
 
 	/**
-	 * ¹ã¸æÌõÏÔÊ¾µÄÍ¼Æ¬¼¯ºÏ
+	 * å¹¿å‘Šæ¡æ˜¾ç¤ºçš„å›¾ç‰‡é›†åˆ
 	 */
 	private List<ImageView> mImageViews;
 
-	/** °´ÖÖÀàÅÅĞòµÄSpinner */
+	/** æŒ‰ç§ç±»æ’åºçš„Spinner */
 	private Spinner typeSpinner;
-	/** °´ÈÈ¶ÈÅÅĞòµÄSpinner */
+	/** æŒ‰çƒ­åº¦æ’åºçš„Spinner */
 	private Spinner hotSpinner;
-	/** ÖÖÀàµÄ¼¯ºÏ */
+	/** ç§ç±»çš„é›†åˆ */
 	private List<String> typeList;
-	/** ÈÈ¶ÈµÄ¼¯ºÏ */
+	/** çƒ­åº¦çš„é›†åˆ */
 	private List<String> hotList;
 
-	/** ²Î¹ÛµÄListView */
+	/** å‚è§‚çš„ListView */
 	private ListView mListView;
 
 	/**
-	 * ´¦ÀíUIÏß³ÌÖĞµÄÍ¼Æ¬×Ô¶¯ÂÖ²¥ÎÊÌâ
+	 * å¤„ç†UIçº¿ç¨‹ä¸­çš„å›¾ç‰‡è‡ªåŠ¨è½®æ’­é—®é¢˜
 	 */
 	private Handler handler = new Handler()
 	{
@@ -83,7 +90,7 @@ public class C_WaiMai extends Activity
 		{
 			if ((System.currentTimeMillis() - exitTime) > 2000 )
 			{
-				Toast.makeText(getApplicationContext(), "ÔÙ°´Ò»´ÎÍË³ö³ÌĞò", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "å†æŒ‰ä¸€æ¬¡é€€å‡ºç¨‹åº", Toast.LENGTH_SHORT).show();
 				exitTime = System.currentTimeMillis();
 			}
 			else
@@ -112,13 +119,14 @@ public class C_WaiMai extends Activity
 	}
 
 	/**
-	 * ÍâÂôµ÷ÑĞ£º±±¾©¿¾Ñ¼£¬À¼ÖİÀ­Ãæ£¬É³ÏØĞ¡³Ô£¬»ÆìË¼¦£¬ÖØÇìĞ¡Ãæ£¬Ò»ºÅË®¹ûÌ¯£¬ÃÎÌğµ°¸âµê£¬ÔÁ×ĞÍå£¬¿ÏµÂ»ù£¬
+	 * å¤–å–è°ƒç ”ï¼šåŒ—äº¬çƒ¤é¸­ï¼Œå…°å·æ‹‰é¢ï¼Œæ²™å¿å°åƒï¼Œé»„ç„–é¸¡ï¼Œé‡åº†å°é¢ï¼Œä¸€å·æ°´æœæ‘Šï¼Œæ¢¦ç”œè›‹ç³•åº—ï¼Œç²¤ä»”æ¹¾ï¼Œè‚¯å¾·åŸºï¼Œ
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.c00_waimai);
+		initSqlData();
 		initSpinnerDate();
 		initViewPagerView();
 		Thread thread = new Thread(new Runnable()
@@ -146,7 +154,42 @@ public class C_WaiMai extends Activity
 		initOtherViews();
 	}
 
-	/** ³õÊ¼»¯Êı¾İ */
+	/** åˆå§‹åŒ–æ•°æ®åº“ä¸­çš„é¤é¦†æ•°æ® */
+	private void initSqlData()
+	{
+		sqlList = new ArrayList<IndexShow>();
+		LocalSQLite localSQLite = new LocalSQLite(getApplicationContext(), LocalSQLite.BD_NAME, null,
+				LocalSQLite.VERSION);
+		SQLiteDatabase data = localSQLite.getReadableDatabase();
+		Cursor cursor = data.rawQuery("select * from restaurant_info", null);
+		if (cursor.moveToFirst() )
+		{
+			do
+			{
+				IndexShow show = new IndexShow();
+				byte[] bs = cursor.getBlob(cursor.getColumnIndex("canguanpic"));
+				// å°†è·å¾—çš„byteæ•°ç»„è½¬æ¢æˆbitmap
+				Bitmap bitmap = BitmapFactory.decodeByteArray(bs, 0, bs.length, null);
+				show.setBitmap(bitmap);
+				String resname = cursor.getString(cursor.getColumnIndex("resname"));
+				show.setResname(resname);
+				int startrunmoney = cursor.getInt(cursor.getColumnIndex("startrunmoney"));
+				show.setStartrunmoney(startrunmoney);
+				String sales = cursor.getString(cursor.getColumnIndex("sales"));
+				show.setSales(sales);
+				int respeisong = cursor.getInt(cursor.getColumnIndex("respeisong"));
+				show.setRespeisong(respeisong);
+				String restype = cursor.getString(cursor.getColumnIndex("restype"));
+				show.setRestype(restype);
+				String score = cursor.getString(cursor.getColumnIndex("score"));
+				show.setScore(score);
+				sqlList.add(show);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+	}
+
+	/** åˆå§‹åŒ–æ•°æ® */
 	private void initData()
 	{
 		int[] images = new int[]
@@ -160,14 +203,14 @@ public class C_WaiMai extends Activity
 		ImageView iv;
 		View v;
 		LayoutParams params;
-		// ³õÊ¼»¯Í¼Æ¬¼¯ºÏµÄÄÚÈİ
+		// åˆå§‹åŒ–å›¾ç‰‡é›†åˆçš„å†…å®¹
 		for (int i = 0; i < images.length; i++)
 		{
 			iv = new ImageView(this);
 			iv.setBackgroundResource(images[i]);
 			mImageViews.add(iv);
 
-			// Ã¿Ñ­»·Ò»´ÎĞèÒªÏòLinearLayoutÒ»¸öµãµÄView¶ÔÏó
+			// æ¯å¾ªç¯ä¸€æ¬¡éœ€è¦å‘LinearLayoutä¸€ä¸ªç‚¹çš„Viewå¯¹è±¡
 			v = new View(this);
 			v.setBackgroundResource(R.drawable.point_bg);
 			params = new LayoutParams(6, 6);
@@ -181,22 +224,22 @@ public class C_WaiMai extends Activity
 		}
 	}
 
-	/** ³õÊ¼»¯spinnerµÄÊı¾İ */
+	/** åˆå§‹åŒ–spinnerçš„æ•°æ® */
 	private void initSpinnerDate()
 	{
 		typeList = new ArrayList<String>();
-		typeList.add("·ÖÀà");
-		typeList.add("¿ì²Í");
-		typeList.add("Õı²Í");
-		typeList.add("Ğ¡³ÔÁãÊ³");
-		typeList.add("¹ûÊßÉúÏÊ");
+		typeList.add("åˆ†ç±»");
+		typeList.add("å¿«é¤");
+		typeList.add("æ­£é¤");
+		typeList.add("å°åƒé›¶é£Ÿ");
+		typeList.add("æœè”¬ç”Ÿé²œ");
 
 		hotList = new ArrayList<String>();
-		hotList.add("ÅÅĞò");
-		hotList.add("ÏúÁ¿×î¸ß");
-		hotList.add("ÆÀ·Ö×î¸ß");
-		hotList.add("ÆğËÍ¼Û×îµÍ");
-		hotList.add("ÅäËÍËÙ¶È×î¿ì");
+		hotList.add("æ’åº");
+		hotList.add("é”€é‡æœ€é«˜");
+		hotList.add("è¯„åˆ†æœ€é«˜");
+		hotList.add("èµ·é€ä»·æœ€ä½");
+		hotList.add("é…é€é€Ÿåº¦æœ€å¿«");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -214,8 +257,8 @@ public class C_WaiMai extends Activity
 			{
 				int newPoition = position % mImageViews.size();
 
-				// °Ñµ±Ç°Ñ¡ÖĞµÄµã¸øÇĞ»»ÁË, »¹ÓĞÃèÊöĞÅÏ¢Ò²ÇĞ»»
-				// ÉèÖÃÇ°Ò»¸öµãÎª²»¿Éµã»÷×´Ì¬
+				// æŠŠå½“å‰é€‰ä¸­çš„ç‚¹ç»™åˆ‡æ¢äº†, è¿˜æœ‰æè¿°ä¿¡æ¯ä¹Ÿåˆ‡æ¢
+				// è®¾ç½®å‰ä¸€ä¸ªç‚¹ä¸ºä¸å¯ç‚¹å‡»çŠ¶æ€
 				mLayout.getChildAt(lastPosition).setEnabled(false);
 				mLayout.getChildAt(newPoition).setEnabled(true);
 				lastPosition = newPoition;
@@ -234,19 +277,19 @@ public class C_WaiMai extends Activity
 			}
 		});
 
-		// ÉèÖÃÄ¬ÈÏÑ¡ÖĞµÄµã.
+		// è®¾ç½®é»˜è®¤é€‰ä¸­çš„ç‚¹.
 		lastPosition = 0;
 		mLayout.getChildAt(lastPosition).setEnabled(true);
 
-		// °ÑViewPagerÉèÖÃÎªÄ¬ÈÏÑ¡ÖĞInteger.MAX_VALUE / 2;
+		// æŠŠViewPagerè®¾ç½®ä¸ºé»˜è®¤é€‰ä¸­Integer.MAX_VALUE / 2;
 		int currentPosition = (Integer.MAX_VALUE / 2) - (Integer.MAX_VALUE / 2) % mImageViews.size();
 		mViewPager.setCurrentItem(currentPosition);
 	}
 
-	/** ³õÊ¼»¯ÆäËû½çÃæ */
+	/** åˆå§‹åŒ–å…¶ä»–ç•Œé¢ */
 	private void initOtherViews()
 	{
-		// ÖÖÀà
+		// ç§ç±»
 		typeSpinner = (Spinner) findViewById(R.id.s_type);
 		ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, typeList);
@@ -254,7 +297,7 @@ public class C_WaiMai extends Activity
 		typeSpinner.setAdapter(typeAdapter);
 		typeSpinner.setOnItemSelectedListener(new TypeOnItemClickListener());
 
-		// ÅÅĞò
+		// æ’åº
 		hotSpinner = (Spinner) findViewById(R.id.s_hot);
 		ArrayAdapter<String> hotAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
 				hotList);
@@ -262,14 +305,14 @@ public class C_WaiMai extends Activity
 		hotSpinner.setAdapter(hotAdapter);
 		hotSpinner.setOnItemSelectedListener(new SortOnItemClickListener());
 
-		// ²Í¹İµÄListView
+		// é¤é¦†çš„ListView
 		mListView = (ListView) findViewById(R.id.lv_index);
 		mListView.setAdapter(new IndexAdapter(getApplicationContext()));
 
 		mListView.setOnItemClickListener(new ListViewItemClickListener());
 	}
 
-	/** listViewµã»÷ÊÂ¼ş */
+	/** listViewç‚¹å‡»äº‹ä»¶ */
 	private class ListViewItemClickListener implements OnItemClickListener
 	{
 
@@ -278,7 +321,7 @@ public class C_WaiMai extends Activity
 		{
 			Intent intent = new Intent();
 			intent.setClass(getApplicationContext(), Ca_DisPlayPage.class);
-			
+
 			startActivity(intent);
 		}
 
@@ -286,21 +329,21 @@ public class C_WaiMai extends Activity
 
 	class ViewHolder
 	{
-		/** ÉÌ»§Í·Ïñ */
+		/** å•†æˆ·å¤´åƒ */
 		ImageView tx_image;
-		/** ÉÌ»§Ãû×Ö */
+		/** å•†æˆ·åå­— */
 		TextView name_text;
-		/** ÉÌ»§ÆğËÍ¼Û */
+		/** å•†æˆ·èµ·é€ä»· */
 		TextView qisongjia_text;
-		/** ÉÌ»§ÅäËÍ·Ñ */
+		/** å•†æˆ·é…é€è´¹ */
 		TextView peisongfei_text;
-		/** ÔÂÏúÊÛµ¥Êı */
+		/** æœˆé”€å”®å•æ•° */
 		TextView num_text;
-		/** ÉÌ»§ÆÀ·Ö */
+		/** å•†æˆ·è¯„åˆ† */
 		TextView fenshu_text;
 	}
 
-	/** Ö÷Ò³ListViewµÄÊÊÅäÆ÷ */
+	/** ä¸»é¡µListViewçš„é€‚é…å™¨ */
 	private class IndexAdapter extends BaseAdapter
 	{
 
@@ -314,7 +357,7 @@ public class C_WaiMai extends Activity
 		@Override
 		public int getCount()
 		{
-			return 5;
+			return sqlList.size();
 		}
 
 		@Override
@@ -342,19 +385,26 @@ public class C_WaiMai extends Activity
 				holder.qisongjia_text = (TextView) convertView.findViewById(R.id.tv_price);
 				holder.peisongfei_text = (TextView) convertView.findViewById(R.id.tv_peisongfei);
 				holder.num_text = (TextView) convertView.findViewById(R.id.tv_danshu);
-				holder.fenshu_text = (TextView) findViewById(R.id.tv_fenshu);
+				holder.fenshu_text = (TextView) convertView.findViewById(R.id.tv_fenshu);
 				convertView.setTag(holder);
 			}
 			else
 			{
 				holder = (ViewHolder) convertView.getTag();
 			}
+			holder.tx_image.setImageBitmap(sqlList.get(position).getBitmap());
+			holder.name_text.setText(sqlList.get(position).getResname());
+			holder.qisongjia_text.setText(String.valueOf(sqlList.get(position).getStartrunmoney()));
+			holder.peisongfei_text
+					.setText("Â¥" + String.valueOf(sqlList.get(position).getRespeisong()) + "é…é€è´¹");
+			holder.num_text.setText(sqlList.get(position).getSales());
+			holder.fenshu_text.setText(sqlList.get(position).getScore());
 			return convertView;
 		}
 
 	}
 
-	/** °´ÈÈ¶ÈÅÅĞò */
+	/** æŒ‰çƒ­åº¦æ’åº */
 	private class SortOnItemClickListener implements OnItemSelectedListener
 	{
 
@@ -372,7 +422,7 @@ public class C_WaiMai extends Activity
 
 	}
 
-	/** °´ÖÖÀàÉ¸Ñ¡ */
+	/** æŒ‰ç§ç±»ç­›é€‰ */
 	private class TypeOnItemClickListener implements OnItemSelectedListener
 	{
 
@@ -391,14 +441,14 @@ public class C_WaiMai extends Activity
 
 	}
 
-	/** PagerAdapterµÄÊÊÅäÆ÷ */
+	/** PagerAdapterçš„é€‚é…å™¨ */
 	private class MyPagerAdapter extends PagerAdapter
 	{
 
 		ImageView imageView = null;
 
 		/**
-		 * ·µ»ØIntegerÀàĞÍµÄÖµ, »á×÷ÎªViewPagerµÄ×Ü³¤¶ÈÀ´Ê¹ÓÃ.
+		 * è¿”å›Integerç±»å‹çš„å€¼, ä¼šä½œä¸ºViewPagerçš„æ€»é•¿åº¦æ¥ä½¿ç”¨.
 		 */
 		@Override
 		public int getCount()
@@ -407,7 +457,7 @@ public class C_WaiMai extends Activity
 		}
 
 		/**
-		 * ÅĞ¶ÏÊÇ·ñÊ¹ÓÃ»º´æ, Èç¹û·µ»ØµÄÊÇtrue, Ê¹ÓÃ»º´æ. ²»È¥µ÷ÓÃinstantiateItem·½·¨´´½¨Ò»¸öĞÂµÄ¶ÔÏó
+		 * åˆ¤æ–­æ˜¯å¦ä½¿ç”¨ç¼“å­˜, å¦‚æœè¿”å›çš„æ˜¯true, ä½¿ç”¨ç¼“å­˜. ä¸å»è°ƒç”¨instantiateItemæ–¹æ³•åˆ›å»ºä¸€ä¸ªæ–°çš„å¯¹è±¡
 		 */
 		@Override
 		public boolean isViewFromObject(View view, Object object)
@@ -416,7 +466,7 @@ public class C_WaiMai extends Activity
 		}
 
 		/**
-		 * ³õÊ¼»¯Ò»¸öÌõÄ¿ position ¾ÍÊÇµ±Ç°ĞèÒª¼ÓÔØÌõÄ¿µÄË÷Òı
+		 * åˆå§‹åŒ–ä¸€ä¸ªæ¡ç›® position å°±æ˜¯å½“å‰éœ€è¦åŠ è½½æ¡ç›®çš„ç´¢å¼•
 		 */
 		@Override
 		public Object instantiateItem(ViewGroup container, int position)
@@ -439,12 +489,101 @@ public class C_WaiMai extends Activity
 		}
 
 		/**
-		 * Ïú»ÙÒ»¸öÌõÄ¿ position ¾ÍÊÇµ±Ç°ĞèÒª±»Ïú»ÙµÄÌõÄ¿µÄË÷Òı
+		 * é”€æ¯ä¸€ä¸ªæ¡ç›® position å°±æ˜¯å½“å‰éœ€è¦è¢«é”€æ¯çš„æ¡ç›®çš„ç´¢å¼•
 		 */
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object)
 		{
 			mViewPager.removeView(mImageViews.get(position % mImageViews.size()));
+		}
+
+	}
+
+	class IndexShow
+	{
+		/** é¤é¦†å¤´åƒ */
+		Bitmap bitmap;
+		/** é¤é¦†åç§° */
+		String resname;
+		/** é¤é¦†èµ·æ­¥ä»· */
+		int startrunmoney;
+		/** é¤é¦†é…é€è´¹ */
+		int respeisong;
+		/** é¤é¦†é”€å”®é‡ */
+		String sales;
+		/** é¤é¦†ç§ç±» */
+		String restype;
+		/** é¤é¦†è¯„åˆ† */
+		String score;
+
+		public Bitmap getBitmap()
+		{
+			return bitmap;
+		}
+
+		public void setBitmap(Bitmap bitmap)
+		{
+			this.bitmap = bitmap;
+		}
+
+		public String getResname()
+		{
+			return resname;
+		}
+
+		public void setResname(String resname)
+		{
+			this.resname = resname;
+		}
+
+		public int getStartrunmoney()
+		{
+			return startrunmoney;
+		}
+
+		public void setStartrunmoney(int startrunmoney)
+		{
+			this.startrunmoney = startrunmoney;
+		}
+
+		public int getRespeisong()
+		{
+			return respeisong;
+		}
+
+		public void setRespeisong(int respeisong)
+		{
+			this.respeisong = respeisong;
+		}
+
+		public String getSales()
+		{
+			return sales;
+		}
+
+		public void setSales(String sales)
+		{
+			this.sales = sales;
+		}
+
+		public String getRestype()
+		{
+			return restype;
+		}
+
+		public void setRestype(String restype)
+		{
+			this.restype = restype;
+		}
+
+		public String getScore()
+		{
+			return score;
+		}
+
+		public void setScore(String score)
+		{
+			this.score = score;
 		}
 
 	}

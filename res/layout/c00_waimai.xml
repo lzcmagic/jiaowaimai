@@ -44,6 +44,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/layout_bg"
         android:padding="10dp" >
 
         <Spinner
@@ -72,6 +73,7 @@
         android:id="@+id/lv_index"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:background="@drawable/listview_bg"
         android:divider="#00000000"
         android:dividerHeight="10dp"
