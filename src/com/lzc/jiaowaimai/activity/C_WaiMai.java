@@ -1,12 +1,13 @@
 package com.lzc.jiaowaimai.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.LocalSQLite;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
-import com.lzc.jiaowaimai.activity.utils.MyToast;
 
 import android.app.Activity;
 import android.content.Context;
@@ -46,7 +47,9 @@ public class C_WaiMai extends Activity
 	private LinearLayout mLayout;
 	private int lastPosition = 0;
 
-	private List<IndexShow> sqlList;
+	private List<IndexShow> sqlList = new ArrayList<IndexShow>();
+
+	private IndexAdapter indexAdapter;
 
 	/** 是否关闭线程的标志位，默认为false:不关闭 */
 	private boolean isStop;
@@ -64,6 +67,8 @@ public class C_WaiMai extends Activity
 	private List<String> typeList;
 	/** 热度的集合 */
 	private List<String> hotList;
+
+	private Map<String, String> map;
 
 	/** 参观的ListView */
 	private ListView mListView;
@@ -126,7 +131,6 @@ public class C_WaiMai extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.c00_waimai);
-		initSqlData();
 		initSpinnerDate();
 		initViewPagerView();
 		Thread thread = new Thread(new Runnable()
@@ -152,41 +156,6 @@ public class C_WaiMai extends Activity
 		thread.start();
 
 		initOtherViews();
-	}
-
-	/** 初始化数据库中的餐馆数据 */
-	private void initSqlData()
-	{
-		sqlList = new ArrayList<IndexShow>();
-		LocalSQLite localSQLite = new LocalSQLite(getApplicationContext(), LocalSQLite.BD_NAME, null,
-				LocalSQLite.VERSION);
-		SQLiteDatabase data = localSQLite.getReadableDatabase();
-		Cursor cursor = data.rawQuery("select * from restaurant_info", null);
-		if (cursor.moveToFirst() )
-		{
-			do
-			{
-				IndexShow show = new IndexShow();
-				byte[] bs = cursor.getBlob(cursor.getColumnIndex("canguanpic"));
-				// 将获得的byte数组转换成bitmap
-				Bitmap bitmap = BitmapFactory.decodeByteArray(bs, 0, bs.length, null);
-				show.setBitmap(bitmap);
-				String resname = cursor.getString(cursor.getColumnIndex("resname"));
-				show.setResname(resname);
-				int startrunmoney = cursor.getInt(cursor.getColumnIndex("startrunmoney"));
-				show.setStartrunmoney(startrunmoney);
-				String sales = cursor.getString(cursor.getColumnIndex("sales"));
-				show.setSales(sales);
-				int respeisong = cursor.getInt(cursor.getColumnIndex("respeisong"));
-				show.setRespeisong(respeisong);
-				String restype = cursor.getString(cursor.getColumnIndex("restype"));
-				show.setRestype(restype);
-				String score = cursor.getString(cursor.getColumnIndex("score"));
-				show.setScore(score);
-				sqlList.add(show);
-			} while (cursor.moveToNext());
-		}
-		cursor.close();
 	}
 
 	/** 初始化数据 */
@@ -231,15 +200,21 @@ public class C_WaiMai extends Activity
 		typeList.add("分类");
 		typeList.add("快餐");
 		typeList.add("正餐");
-		typeList.add("小吃零食");
-		typeList.add("果蔬生鲜");
+		typeList.add("小吃");
+		typeList.add("水果");
+		typeList.add("甜品");
 
 		hotList = new ArrayList<String>();
+		map = new HashMap<String, String>();
 		hotList.add("排序");
 		hotList.add("销量最高");
+		map.put("销量最高", "sales");
 		hotList.add("评分最高");
+		map.put("评分最高", "score");
 		hotList.add("起送价最低");
+		map.put("起送价最低", "startrunmoney");
 		hotList.add("配送速度最快");
+		map.put("配送速度最快", "runspeed");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -295,6 +270,7 @@ public class C_WaiMai extends Activity
 				android.R.layout.simple_spinner_item, typeList);
 		typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		typeSpinner.setAdapter(typeAdapter);
+		// typeSpinner.setSelected(false);
 		typeSpinner.setOnItemSelectedListener(new TypeOnItemClickListener());
 
 		// 排序
@@ -307,7 +283,8 @@ public class C_WaiMai extends Activity
 
 		// 餐馆的ListView
 		mListView = (ListView) findViewById(R.id.lv_index);
-		mListView.setAdapter(new IndexAdapter(getApplicationContext()));
+		indexAdapter = new IndexAdapter(getApplicationContext());
+		mListView.setAdapter(indexAdapter);
 
 		mListView.setOnItemClickListener(new ListViewItemClickListener());
 	}
@@ -321,7 +298,9 @@ public class C_WaiMai extends Activity
 		{
 			Intent intent = new Intent();
 			intent.setClass(getApplicationContext(), Ca_DisPlayPage.class);
-
+			intent.putExtra("currentres_info", sqlList.get(position).toString());
+			Bitmap bitmap = sqlList.get(position).getBitmap();
+			intent.putExtra("currentres_bitmap", bitmap);
 			startActivity(intent);
 		}
 
@@ -411,7 +390,10 @@ public class C_WaiMai extends Activity
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 		{
-
+			sqlList.clear();
+			initSqlDataForSpinner(typeSpinner.getSelectedItem().toString(),
+					parent.getSelectedItem().toString());
+			indexAdapter.notifyDataSetChanged();
 		}
 
 		@Override
@@ -429,8 +411,11 @@ public class C_WaiMai extends Activity
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 		{
-			MyToast.show((String) parent.getSelectedItem(), getApplicationContext());
 
+			sqlList.clear();
+			initSqlDataForSpinner(parent.getSelectedItem().toString(),
+					hotSpinner.getSelectedItem().toString());
+			indexAdapter.notifyDataSetChanged();
 		}
 
 		@Override
@@ -515,6 +500,22 @@ public class C_WaiMai extends Activity
 		String restype;
 		/** 餐馆评分 */
 		String score;
+		/** 餐馆送餐速度 */
+		String runspeed;
+		/** 餐馆地址id */
+		String resaddressid;
+		/** 餐馆菜单id */
+		String menuid;
+
+		public String getRunspeed()
+		{
+			return runspeed;
+		}
+
+		public void setRunspeed(String runspeed)
+		{
+			this.runspeed = runspeed;
+		}
 
 		public Bitmap getBitmap()
 		{
@@ -539,6 +540,26 @@ public class C_WaiMai extends Activity
 		public int getStartrunmoney()
 		{
 			return startrunmoney;
+		}
+
+		public String getResaddressid()
+		{
+			return resaddressid;
+		}
+
+		public void setResaddressid(String resaddressid)
+		{
+			this.resaddressid = resaddressid;
+		}
+
+		public String getMenuid()
+		{
+			return menuid;
+		}
+
+		public void setMenuid(String menuid)
+		{
+			this.menuid = menuid;
 		}
 
 		public void setStartrunmoney(int startrunmoney)
@@ -579,12 +600,104 @@ public class C_WaiMai extends Activity
 		public String getScore()
 		{
 			return score;
+
 		}
 
 		public void setScore(String score)
 		{
 			this.score = score;
 		}
+
+		@Override
+		public String toString()
+		{
+			return "resname=" + resname + ", startrunmoney=" + startrunmoney + ", respeisong=" + respeisong
+					+ ", sales=" + sales + ", restype=" + restype + ", score=" + score + ", runspeed="
+					+ runspeed + ", resaddressid=" + resaddressid + ", menuid=" + menuid;
+		}
+
+	}
+
+	/** adapter的数据 */
+	private void initSqlDataForSpinner(String typeText, String hotText)
+	{
+
+		LocalSQLite localSQLite = new LocalSQLite(getApplicationContext(), LocalSQLite.BD_NAME, null,
+				LocalSQLite.VERSION);
+		SQLiteDatabase data = localSQLite.getReadableDatabase();
+		Cursor cursor = null;
+		if (typeText.equals("分类") )
+		{
+			if (hotText.equals("排序") )
+			{
+				cursor = data.rawQuery("select * from restaurant_info", null);
+			}
+			else
+			{
+				if (hotText.equals("销量最高") || hotText.equals("评分最高") )
+				{
+					cursor = data.rawQuery(
+							"select * from restaurant_info order by " + map.get(hotText) + " desc", null);
+				}
+				else
+				{
+					cursor = data.rawQuery(
+							"select * from restaurant_info order by " + map.get(hotText) + " asc", null);
+				}
+			}
+		}
+		else
+		{
+			if (hotText.equals("排序") )
+			{
+				cursor = data.rawQuery("select * from restaurant_info", null);
+			}
+			else
+			{
+				if (hotText.equals("销量最高") || hotText.equals("评分最高") )
+				{
+					cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText
+							+ "'" + " order by " + map.get(hotText) + " desc", null);
+				}
+				else
+				{
+					cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText
+							+ "'" + " order by " + map.get(hotText) + " asc", null);
+				}
+			}
+
+		}
+		if (cursor.moveToFirst() )
+		{
+			do
+			{
+				IndexShow show = new IndexShow();
+				byte[] bs = cursor.getBlob(cursor.getColumnIndex("canguanpic"));
+				// 将获得的byte数组转换成bitmap
+				Bitmap bitmap = BitmapFactory.decodeByteArray(bs, 0, bs.length, null);
+				show.setBitmap(bitmap);
+				String resname = cursor.getString(cursor.getColumnIndex("resname"));
+				show.setResname(resname);
+				int startrunmoney = cursor.getInt(cursor.getColumnIndex("startrunmoney"));
+				show.setStartrunmoney(startrunmoney);
+				String sales = cursor.getString(cursor.getColumnIndex("sales"));
+				show.setSales(sales);
+				int respeisong = cursor.getInt(cursor.getColumnIndex("respeisong"));
+				show.setRespeisong(respeisong);
+				String restype = cursor.getString(cursor.getColumnIndex("restype"));
+				show.setRestype(restype);
+				String score = cursor.getString(cursor.getColumnIndex("score"));
+				show.setScore(score);
+				String runspeed = cursor.getString(cursor.getColumnIndex("runspeed"));
+				show.setRunspeed(runspeed);
+				String resaddressid = cursor.getString(cursor.getColumnIndex("resaddressid"));
+				show.setRunspeed(resaddressid);
+				String menuid = cursor.getString(cursor.getColumnIndex("menuid"));
+				show.setRunspeed(menuid);
+				sqlList.add(show);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
 
 	}
 

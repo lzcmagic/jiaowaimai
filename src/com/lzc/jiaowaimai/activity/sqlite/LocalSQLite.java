@@ -68,7 +68,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values.put("resname", "北京烤鸭");
 		Drawable drawable = context.getResources().getDrawable(R.drawable.bjky);
 		values.put("canguanpic", getPicture(drawable));
-		values.put("restype", "小吃");
+		values.put("restype", "正餐");
 		values.put("runspeed", "30");
 		values.put("startrunmoney", "15");
 		values.put("sales", "0");

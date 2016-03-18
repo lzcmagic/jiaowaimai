@@ -7,6 +7,7 @@ import com.lzc.jiaowaimai.R;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 public class Ca_DisPlayPage extends FragmentActivity
 {
+
 	private ViewPager mViewPager;
 
 	private List<Fragment> listFrament;
@@ -32,7 +34,10 @@ public class Ca_DisPlayPage extends FragmentActivity
 	private TextView ca_pinjia;
 	private TextView ca_shangjia;
 
-	private ImageView mImage;
+	private ImageView dingdanImage, touxaingImage;
+
+	String[] array = null;
+	Bitmap bitmap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -40,12 +45,22 @@ public class Ca_DisPlayPage extends FragmentActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.ca_display);
+		System.out.println("*****" + getIntent().getStringExtra("currentres"));
+		array = getIntent().getStringExtra("currentres_info").split(",");
+		bitmap = getIntent().getParcelableExtra("currentres_bitmap");
 		initViews();
 	}
 
 	@SuppressWarnings("deprecation")
 	private void initViews()
 	{
+		touxaingImage = (ImageView) findViewById(R.id.cap02);
+		String[] newArray = array[0].split("=");
+		System.out.println("newArray" + newArray[1]);
+		// Bitmap bitmap=BitmapFactory.decodeByteArray(newArray[1], 0,
+		// array[0].length());
+		touxaingImage.setImageBitmap(bitmap);
+
 		listFrament = new ArrayList<Fragment>();
 		listFrament.add(new Cb_ShangPin());
 		listFrament.add(new Cd_PinJia());
@@ -83,8 +98,8 @@ public class Ca_DisPlayPage extends FragmentActivity
 			}
 		});
 
-		mImage = (ImageView) findViewById(R.id.ca_image);
-		mImage.setOnClickListener(new OnClickListener()
+		dingdanImage = (ImageView) findViewById(R.id.ca_image);
+		dingdanImage.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
