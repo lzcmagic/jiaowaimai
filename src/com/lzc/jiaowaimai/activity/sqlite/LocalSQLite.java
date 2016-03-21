@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 /** 本地数据表 */
 public class LocalSQLite extends SQLiteOpenHelper
 {
-	public static final int VERSION = 5;
+	public static final int VERSION = 6;
 	public static final String BD_NAME = "jiaowaimai.db";
 
 	private Context mContext;
@@ -32,7 +32,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db)
 	{
 		db.execSQL(
-				"create table person_info (userid text primary key,username text,password text,userpic bolb,balance integer,addressid text,redpackageid text);");
+				"create table person_info (userid text primary key,username text,password text,phone text,userpic bolb,balance integer,addressid text,redpackageid text);");
 		db.execSQL(
 				"create table address_info(addressid text primary key,province text,city text,country text,street text);");
 		db.execSQL(

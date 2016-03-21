@@ -34,6 +34,9 @@ public class Ca_DisPlayPage extends FragmentActivity
 	private TextView ca_pinjia;
 	private TextView ca_shangjia;
 
+	// 店名，起送价，配送费，配餐速度
+	private TextView cal01, ca_qisong, ca_peisong, ca_runspeed;
+
 	private ImageView dingdanImage, touxaingImage;
 
 	String[] array = null;
@@ -45,7 +48,7 @@ public class Ca_DisPlayPage extends FragmentActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.ca_display);
-		System.out.println("*****" + getIntent().getStringExtra("currentres"));
+		System.out.println("*****" + getIntent().getStringExtra("currentres_info"));
 		array = getIntent().getStringExtra("currentres_info").split(",");
 		bitmap = getIntent().getParcelableExtra("currentres_bitmap");
 		initViews();
@@ -55,11 +58,21 @@ public class Ca_DisPlayPage extends FragmentActivity
 	private void initViews()
 	{
 		touxaingImage = (ImageView) findViewById(R.id.cap02);
+		touxaingImage.setImageBitmap(bitmap);
+
 		String[] newArray = array[0].split("=");
 		System.out.println("newArray" + newArray[1]);
-		// Bitmap bitmap=BitmapFactory.decodeByteArray(newArray[1], 0,
-		// array[0].length());
-		touxaingImage.setImageBitmap(bitmap);
+		cal01 = (TextView) findViewById(R.id.cal01);
+		cal01.setText(newArray[1]);
+
+		ca_qisong = (TextView) findViewById(R.id.ca_qisong);
+		ca_qisong.setText(array[1].split("=")[1] + "元起送");
+
+		ca_peisong = (TextView) findViewById(R.id.ca_peisong);
+		ca_peisong.setText(array[2].split("=")[1] + "元配送费");
+
+		ca_runspeed = (TextView) findViewById(R.id.ca_runspeed);
+		ca_runspeed.setText(array[6].split("=")[1] + "分钟内送达");
 
 		listFrament = new ArrayList<Fragment>();
 		listFrament.add(new Cb_ShangPin());

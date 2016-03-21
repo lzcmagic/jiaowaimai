@@ -53,6 +53,16 @@ public class Aa_Title extends Fragment
 			mTextView.setText("我的信息");
 			mLayout.setVisibility(View.GONE);
 		}
+		if (activity.getClass() == Fa_Login.class )
+		{
+			mTextView.setText("登录");
+			mLayout.setVisibility(View.VISIBLE);
+		}
+		if (activity.getClass() == Fb_UserInfo.class )
+		{
+			mTextView.setText("信息");
+			mLayout.setVisibility(View.GONE);
+		}
 		return view;
 	}
 

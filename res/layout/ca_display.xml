@@ -74,6 +74,14 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
                     android:background="#cccccc" />
+                <TextView
+                    android:id="@+id/ca_runspeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="30分钟内送达"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

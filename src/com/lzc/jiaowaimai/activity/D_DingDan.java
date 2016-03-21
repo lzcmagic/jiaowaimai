@@ -44,13 +44,14 @@ public class D_DingDan extends Activity
 	private class MyListAdapter extends BaseAdapter
 	{
 		private LayoutInflater mInflater;
-		
+
+		@SuppressWarnings("unused")
 		private ListView contentListView;
 
 		public MyListAdapter(Context mContext)
 		{
 			this.mInflater = LayoutInflater.from(mContext);
-			contentListView=(ListView) findViewById(R.id.di03);
+			contentListView = (ListView) findViewById(R.id.di03);
 		}
 
 		@Override

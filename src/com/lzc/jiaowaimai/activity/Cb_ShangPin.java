@@ -5,7 +5,6 @@ import com.lzc.jiaowaimai.R;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+@SuppressWarnings("unused")
 public class Cb_ShangPin extends Fragment
 {
 
@@ -39,6 +39,7 @@ public class Cb_ShangPin extends Fragment
 		};
 	};
 
+	@SuppressWarnings("static-access")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -52,13 +53,12 @@ public class Cb_ShangPin extends Fragment
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				
-				
+
 				View view1 = mListView.getChildAt(position).inflate(getContext(), R.layout.cb10_shangpin_item,
 						null);
 				TextView textView = (TextView) view1.findViewById(R.id.cb_fenshu);
 				textView.setText(String.valueOf(cout++));
-				System.out.println("posi----"+"zhixingdaole");
+				System.out.println("posi----" + "zhixingdaole");
 			}
 		});
 		return view;
@@ -125,6 +125,7 @@ public class Cb_ShangPin extends Fragment
 
 			hold.puls_button.setOnClickListener(new OnClickListener()
 			{
+				@SuppressWarnings("static-access")
 				@Override
 				public void onClick(View v)
 				{

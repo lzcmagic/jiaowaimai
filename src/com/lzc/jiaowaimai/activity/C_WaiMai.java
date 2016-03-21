@@ -650,7 +650,8 @@ public class C_WaiMai extends Activity
 		{
 			if (hotText.equals("排序") )
 			{
-				cursor = data.rawQuery("select * from restaurant_info", null);
+				cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText + "'",
+						null);
 			}
 			else
 			{
@@ -691,9 +692,9 @@ public class C_WaiMai extends Activity
 				String runspeed = cursor.getString(cursor.getColumnIndex("runspeed"));
 				show.setRunspeed(runspeed);
 				String resaddressid = cursor.getString(cursor.getColumnIndex("resaddressid"));
-				show.setRunspeed(resaddressid);
+				show.setResaddressid(resaddressid);
 				String menuid = cursor.getString(cursor.getColumnIndex("menuid"));
-				show.setRunspeed(menuid);
+				show.setMenuid(menuid);
 				sqlList.add(show);
 			} while (cursor.moveToNext());
 		}
