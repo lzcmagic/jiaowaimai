@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.LocalSQLite;
-import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 
 import android.app.Activity;
 import android.content.Context;
@@ -119,7 +118,6 @@ public class C_WaiMai extends Activity
 	@Override
 	protected void onResume()
 	{
-		new SQLiteDao(getApplicationContext());
 		super.onResume();
 	}
 

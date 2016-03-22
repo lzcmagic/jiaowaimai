@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 /** 本地数据表 */
 public class LocalSQLite extends SQLiteOpenHelper
 {
-	public static final int VERSION = 6;
+	public static final int VERSION = 7;
 	public static final String BD_NAME = "jiaowaimai.db";
 
 	private Context mContext;
@@ -36,7 +36,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		db.execSQL(
 				"create table address_info(addressid text primary key,province text,city text,country text,street text);");
 		db.execSQL(
-				"create table redpackage_info(redpackageid text primary key,amount integer,type text,starttime text,endtiem text);");
+				"create table redpackage_info(redpackageid text primary key,amount integer,type text,starttime text,endtime text);");
 		db.execSQL(
 				"create table ordermeal_info(mealid text primary key,restaurantname text,mealname text,mealnum integer,mealmoney integer,restaurantid text);");
 		db.execSQL(
@@ -268,7 +268,13 @@ public class LocalSQLite extends SQLiteOpenHelper
 	 */
 	private void initTable_Redpackage_Info(SQLiteDatabase db, Context mContext2)
 	{
-
+		ContentValues values = new ContentValues();
+		values.put("redpackageid", "500");
+		values.put("amount", "100");
+		values.put("type", "管理员红包");
+		values.put("starttime", "1970-01-01");
+		values.put("endtime", "2100-12-31");
+		db.insert("redpackage_info", null, values);
 	}
 
 	/**
@@ -277,9 +283,15 @@ public class LocalSQLite extends SQLiteOpenHelper
 	 * @param mContext2
 	 * @param db
 	 */
-	private void initTable_Address_Info(SQLiteDatabase db, Context mContext2)
+	private void initTable_Address_Info(SQLiteDatabase db, Context context)
 	{
-
+		ContentValues values = new ContentValues();
+		values.put("addressid", "500");
+		values.put("province", "江苏省");
+		values.put("city", "常州市");
+		values.put("country", "溧阳县");
+		values.put("street", "社渚镇农贸市场北楼");
+		db.insert("address_info", null, values);
 	}
 
 	/**
@@ -288,9 +300,19 @@ public class LocalSQLite extends SQLiteOpenHelper
 	 * @param mContext2
 	 * @param db
 	 */
-	private void initTable_Person_Info(SQLiteDatabase db, Context mContext2)
+	private void initTable_Person_Info(SQLiteDatabase db, Context context)
 	{
-
+		ContentValues values = new ContentValues();
+		values.put("userid", "100");
+		values.put("username", "admin");
+		values.put("password", "admin");
+		Drawable drawable = context.getResources().getDrawable(R.drawable.admin_touxiang);
+		values.put("phone", "13915873770");
+		values.put("userpic", getPicture(drawable));
+		values.put("balance", "10000");
+		values.put("addressid", "500");
+		values.put("redpackageid", "500");
+		db.insert("person_info", null, values);
 	}
 
 	@Override
