@@ -22,7 +22,7 @@ public class SQLiteDao
 		return cursor;
 	}
 
-	/** 插入 新用户数据 */
+	/** 注册时插入 新用户数据 */
 	public static void insert(Context context, String phone, String password)
 	{
 		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
@@ -40,9 +40,34 @@ public class SQLiteDao
 
 	}
 
-	/** 修改 */
-	public static void update()
+	/** 修改 用户信息 */
+	public static void update(Context context, String phone, String key, String value)
 	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(key, value);
 
+		String whereClause = "phone=?";
+		String[] whereArgs = new String[]
+		{
+			phone
+		};
+		db.update("person_info", values, whereClause, whereArgs);
+	}
+
+	/** 修改用户图片 */
+	public static void updateUserPic(Context context, String phone, byte[] bs)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("userpic", bs);
+		String whereClause = "phone=?";
+		String[] whereArgs = new String[]
+		{
+			phone
+		};
+		db.update("person_info", values, whereClause, whereArgs);
 	}
 }

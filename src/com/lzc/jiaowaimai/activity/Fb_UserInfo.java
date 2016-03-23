@@ -1,8 +1,11 @@
 package com.lzc.jiaowaimai.activity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
+import com.lzc.jiaowaimai.activity.utils.MyToast;
 import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
@@ -10,6 +13,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +22,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,8 +31,9 @@ import android.widget.Toast;
 public class Fb_UserInfo extends Activity
 {
 	private ImageView mImageView;
-	private TextView username, phone;
-	private LinearLayout txLayout, xmLayout, dhLayout, loginLayout, payLayout;
+	private TextView username, phone, pay_pass;
+	private LinearLayout xmLayout, dhLayout, loginLayout, payLayout;
+	private Button exit_login;
 
 	private static final int SELECT_PICTURE = 1;
 	private static final int SELECT_CAMER = 0;
@@ -57,7 +63,7 @@ public class Fb_UserInfo extends Activity
 		mImageView.setOnClickListener(new ImageViewOnclickListener());
 
 		username = (TextView) findViewById(R.id.fb00_username);
-		if (ApplWork.CurrentUser.getUsername() != null )
+		if (ApplWork.CurrentUser.getUsername() != null && !"".equals(ApplWork.CurrentUser.getUsername()) )
 		{
 			username.setText(ApplWork.CurrentUser.getUsername());
 		}
@@ -67,21 +73,111 @@ public class Fb_UserInfo extends Activity
 		}
 
 		phone = (TextView) findViewById(R.id.fb00_phone);
-		if (ApplWork.CurrentUser.getPhone() != null )
+		if (ApplWork.CurrentUser.getPhone() != null && !"".equals(ApplWork.CurrentUser.getPhone()) )
 		{
-			phone.setText(ApplWork.CurrentUser.getPhone());
+			String tel = ApplWork.CurrentUser.getPhone();
+			Fb_UserInfo.this.phone.setText(tel.replace(tel.substring(3, 7), "****"));
 		}
 		else
 		{
-			phone.setText("修改");
+			Fb_UserInfo.this.phone.setText("修改");
+		}
+
+		pay_pass = (TextView) findViewById(R.id.fb00_pay);
+		if (ApplWork.CurrentUser.getPaypassword() != null
+				&& !"".equals(ApplWork.CurrentUser.getPaypassword()) )
+		{
+			pay_pass.setText("修改");
+		}
+		else
+		{
+			pay_pass.setText("未设置");
 		}
 
 		xmLayout = (LinearLayout) findViewById(R.id.tx_username);
+		xmLayout.setOnClickListener(new UserNameOnclickListener());
 		dhLayout = (LinearLayout) findViewById(R.id.tx_phone);
+		dhLayout.setOnClickListener(new PhoneOnclickListener());
 		loginLayout = (LinearLayout) findViewById(R.id.tx_change_password);
+		loginLayout.setOnClickListener(new LoginPassOnclickListener());
 		payLayout = (LinearLayout) findViewById(R.id.tx_pay_password);
+		payLayout.setOnClickListener(new PayPassOnclickListener());
+
+		exit_login = (Button) findViewById(R.id.exit_login);
+		exit_login.setOnClickListener(new ExitButtonOnclickListener());
 	}
 
+	/** 退出按钮监听事件 */
+	private class ExitButtonOnclickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			ApplWork.CurrentUser = null;
+			Fb_UserInfo.this.finish();
+		}
+
+	}
+
+	/** 电话栏点击事件 */
+	private class PhoneOnclickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			MyToast.show("不可修改", Fb_UserInfo.this);
+		}
+
+	}
+
+	/** 登录密码栏点击事件 */
+	private class LoginPassOnclickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			Intent intent = new Intent();
+			intent.setClass(Fb_UserInfo.this, FBc_Update_Info.class);
+			intent.putExtra("phone", ApplWork.CurrentUser.getPhone());
+			startActivity(intent);
+		}
+
+	}
+
+	/** 支付密码栏点击事件 */
+	private class PayPassOnclickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			Intent intent = new Intent();
+			intent.setClass(Fb_UserInfo.this, FBd_Update_Info.class);
+			intent.putExtra("phone", ApplWork.CurrentUser.getPhone());
+			startActivity(intent);
+		}
+
+	}
+
+	/** 用户名点击事件 */
+	private class UserNameOnclickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			Intent intent = new Intent();
+			intent.setClass(Fb_UserInfo.this, FBa_Update_Info.class);
+			intent.putExtra("phone", ApplWork.CurrentUser.getPhone());
+			startActivity(intent);
+		}
+
+	}
+
+	/** 头像点击事件 */
 	private class ImageViewOnclickListener implements OnClickListener
 	{
 
@@ -183,6 +279,10 @@ public class Fb_UserInfo extends Activity
 				return;
 			}
 			Bitmap bm = BitmapFactory.decodeFile(mOutputFile.getAbsolutePath() + "tmp");
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			bm.compress(CompressFormat.PNG, 100, baos);
+			SQLiteDao.updateUserPic(Fb_UserInfo.this, ApplWork.CurrentUser.getPhone(), baos.toByteArray());
+			ApplWork.CurrentUser.setUserpic(bm);
 			mImageView.setImageBitmap(bm);
 		}
 		if (requestCode == SELECT_PICTURE )
@@ -214,6 +314,10 @@ public class Fb_UserInfo extends Activity
 			}
 			// 获取相机返回的数据，并转换为图片格式
 			Bitmap bitmap = BitmapFactory.decodeFile(mOutputFile.getAbsolutePath());
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			bitmap.compress(CompressFormat.PNG, 100, baos);
+			SQLiteDao.updateUserPic(Fb_UserInfo.this, ApplWork.CurrentUser.getPhone(), baos.toByteArray());
+			ApplWork.CurrentUser.setUserpic(bitmap);
 			mImageView.setImageBitmap(bitmap);
 		}
 	}

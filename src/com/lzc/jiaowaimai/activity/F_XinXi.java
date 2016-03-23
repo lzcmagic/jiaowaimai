@@ -73,7 +73,7 @@ public class F_XinXi extends Activity
 			username.setText("µÇÂ¼/×¢²á");
 			userphone.setText("");
 		}
-		else
+		else 
 		{
 			tx_image.setClickable(true);
 			tx_image.setImageBitmap(ApplWork.CurrentUser.getUserpic());

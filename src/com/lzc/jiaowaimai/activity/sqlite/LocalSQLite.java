@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 /** 本地数据表 */
 public class LocalSQLite extends SQLiteOpenHelper
 {
-	public static final int VERSION = 7;
+	public static final int VERSION = 8;
 	public static final String BD_NAME = "jiaowaimai.db";
 
 	private Context mContext;
@@ -32,7 +32,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db)
 	{
 		db.execSQL(
-				"create table person_info (userid text primary key,username text,password text,phone text,userpic bolb,balance integer,addressid text,redpackageid text);");
+				"create table person_info (userid text primary key,username text,password text,paypassword text,phone text,userpic bolb,balance integer,addressid text,redpackageid text);");
 		db.execSQL(
 				"create table address_info(addressid text primary key,province text,city text,country text,street text);");
 		db.execSQL(
@@ -306,7 +306,8 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values.put("userid", "100");
 		values.put("username", "admin");
 		values.put("password", "admin");
-		Drawable drawable = context.getResources().getDrawable(R.drawable.admin_touxiang);
+		values.put("paypassword", "123456");
+		Drawable drawable = context.getResources().getDrawable(R.drawable.admin);
 		values.put("phone", "13915873770");
 		values.put("userpic", getPicture(drawable));
 		values.put("balance", "10000");

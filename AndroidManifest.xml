@@ -57,6 +57,22 @@
             android:name="com.lzc.jiaowaimai.activity.Fb_UserInfo"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.FBa_Update_Info"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.FBb_Update_Info"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.FBc_Update_Info"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.FBd_Update_Info"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

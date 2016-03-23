@@ -61,7 +61,27 @@ public class Aa_Title extends Fragment
 		if (activity.getClass() == Fb_UserInfo.class )
 		{
 			mTextView.setText("信息");
-			mLayout.setVisibility(View.GONE);
+			mLayout.setVisibility(View.VISIBLE);
+		}
+		if (activity.getClass() == FBa_Update_Info.class )
+		{
+			mTextView.setText("用户名");
+			mLayout.setVisibility(View.VISIBLE);
+		}
+		if (activity.getClass() == FBb_Update_Info.class )
+		{
+			mTextView.setText("手机号");
+			mLayout.setVisibility(View.VISIBLE);
+		}
+		if (activity.getClass() == FBc_Update_Info.class )
+		{
+			mTextView.setText("登录密码");
+			mLayout.setVisibility(View.VISIBLE);
+		}
+		if (activity.getClass() == FBd_Update_Info.class )
+		{
+			mTextView.setText("支付密码");
+			mLayout.setVisibility(View.VISIBLE);
 		}
 		return view;
 	}

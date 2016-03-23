@@ -1,7 +1,6 @@
 package com.lzc.jiaowaimai.activity;
 
 import com.lzc.jiaowaimai.R;
-import com.lzc.jiaowaimai.activity.bean.CurrentUser;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 import com.lzc.jiaowaimai.activity.utils.MyToast;
 import com.lzc.jiaowaimai.framework.ApplWork;
@@ -57,27 +56,27 @@ public class Fa_Login extends Activity
 					if (Fa_Login.this.password.getText().toString().equals(password) )
 					{
 						MyToast.show("µÇÂ¼³É¹¦£¡", getApplicationContext());
-						CurrentUser user = new CurrentUser();
-						user.setPassword(password);
+						ApplWork.CurrentUser.setPassword(password);
 						String userid = cursor.getString(cursor.getColumnIndex("userid"));
-						user.setUserid(userid);
+						ApplWork.CurrentUser.setUserid(userid);
 						String username = cursor.getString(cursor.getColumnIndex("username"));
-						user.setUsername(username);
+						ApplWork.CurrentUser.setUsername(username);
 						String phone = cursor.getString(cursor.getColumnIndex("phone"));
-						user.setPhone(phone);
+						ApplWork.CurrentUser.setPhone(phone);
 						byte[] userpic = cursor.getBlob(cursor.getColumnIndex("userpic"));
 						if (userpic != null )
 						{
 							Bitmap bitmap = BitmapFactory.decodeByteArray(userpic, 0, userpic.length, null);
-							user.setUserpic(bitmap);
+							ApplWork.CurrentUser.setUserpic(bitmap);
 						}
 						int balance = cursor.getInt(cursor.getColumnIndex("balance"));
-						user.setBalance(balance);
+						ApplWork.CurrentUser.setBalance(balance);
 						String addressid = cursor.getString(cursor.getColumnIndex("addressid"));
-						user.setAddressid(addressid);
+						ApplWork.CurrentUser.setAddressid(addressid);
 						String redpackageid = cursor.getString(cursor.getColumnIndex("redpackageid"));
-						user.setRedpackageid(redpackageid);
-						ApplWork.CurrentUser = user;
+						ApplWork.CurrentUser.setRedpackageid(redpackageid);
+						String paypassword = cursor.getString(cursor.getColumnIndex("paypassword"));
+						ApplWork.CurrentUser.setPaypassword(paypassword);
 						Fa_Login.this.finish();
 					}
 					else
