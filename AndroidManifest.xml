@@ -73,6 +73,10 @@
             android:name="com.lzc.jiaowaimai.activity.FBd_Update_Info"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.G_Hongbao"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

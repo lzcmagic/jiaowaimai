@@ -11,7 +11,6 @@ public class CurrentUser
 	String phone;
 	int balance;
 	String addressid;
-	String redpackageid;
 	String paypassword;
 
 	public String getPaypassword()
@@ -92,16 +91,6 @@ public class CurrentUser
 	public void setAddressid(String addressid)
 	{
 		this.addressid = addressid;
-	}
-
-	public String getRedpackageid()
-	{
-		return redpackageid;
-	}
-
-	public void setRedpackageid(String redpackageid)
-	{
-		this.redpackageid = redpackageid;
 	}
 
 }

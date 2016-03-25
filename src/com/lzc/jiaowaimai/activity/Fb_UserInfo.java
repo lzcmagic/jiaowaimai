@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.bean.CurrentUser;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 import com.lzc.jiaowaimai.activity.utils.MyToast;
 import com.lzc.jiaowaimai.framework.ApplWork;
@@ -45,7 +46,13 @@ public class Fb_UserInfo extends Activity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.fb00_user_info);
+	}
+
+	@Override
+	protected void onResume()
+	{
 		initViews();
+		super.onResume();
 	}
 
 	/** 初始化 */
@@ -114,7 +121,7 @@ public class Fb_UserInfo extends Activity
 		@Override
 		public void onClick(View v)
 		{
-			ApplWork.CurrentUser = null;
+			ApplWork.CurrentUser = new CurrentUser();
 			Fb_UserInfo.this.finish();
 		}
 
@@ -155,8 +162,19 @@ public class Fb_UserInfo extends Activity
 		public void onClick(View v)
 		{
 			Intent intent = new Intent();
-			intent.setClass(Fb_UserInfo.this, FBd_Update_Info.class);
-			intent.putExtra("phone", ApplWork.CurrentUser.getPhone());
+			if (pay_pass.getText().toString().equals("未设置") )
+			{
+
+				intent.setClass(Fb_UserInfo.this, FBd_Update_Info.class);
+				intent.putExtra("phone", ApplWork.CurrentUser.getPhone());
+				intent.putExtra("IsPayExist", false);
+			}
+			else
+			{
+				intent.setClass(Fb_UserInfo.this, FBd_Update_Info.class);
+				intent.putExtra("phone", ApplWork.CurrentUser.getPhone());
+				intent.putExtra("IsPayExist", true);
+			}
 			startActivity(intent);
 		}
 
@@ -289,20 +307,24 @@ public class Fb_UserInfo extends Activity
 		{
 			String sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 			mOutputFile = new File(sdPath, System.currentTimeMillis() + ".tmp");
-			Uri uri = data.getData();
-			System.out.println("uri1" + uri);
-			Intent intent = new Intent("com.android.camera.action.CROP");
-			intent.setDataAndType(uri, "image/*");
-			// 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-			intent.putExtra("crop", true);
-			// aspectX aspectY 是宽高的比例
-			intent.putExtra("aspectX", 1);
-			intent.putExtra("aspectY", 1);
-			// outputX outputY 是裁剪图片宽高
-			intent.putExtra("outputX", 150);
-			intent.putExtra("outputY", 150);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mOutputFile));
-			startActivityForResult(intent, 4);
+
+			if (data != null )
+			{
+				Uri uri = data.getData();
+				System.out.println("uri1" + uri);
+				Intent intent = new Intent("com.android.camera.action.CROP");
+				intent.setDataAndType(uri, "image/*");
+				// 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+				intent.putExtra("crop", true);
+				// aspectX aspectY 是宽高的比例
+				intent.putExtra("aspectX", 1);
+				intent.putExtra("aspectY", 1);
+				// outputX outputY 是裁剪图片宽高
+				intent.putExtra("outputX", 150);
+				intent.putExtra("outputY", 150);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mOutputFile));
+				startActivityForResult(intent, 4);
+			}
 		}
 		if (requestCode == 4 )
 		{

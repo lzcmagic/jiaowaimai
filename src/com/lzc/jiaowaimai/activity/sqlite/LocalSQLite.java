@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 /** 本地数据表 */
 public class LocalSQLite extends SQLiteOpenHelper
 {
-	public static final int VERSION = 8;
+	public static final int VERSION = 9;
 	public static final String BD_NAME = "jiaowaimai.db";
 
 	private Context mContext;
@@ -32,11 +32,11 @@ public class LocalSQLite extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db)
 	{
 		db.execSQL(
-				"create table person_info (userid text primary key,username text,password text,paypassword text,phone text,userpic bolb,balance integer,addressid text,redpackageid text);");
+				"create table person_info (userid text primary key,username text,password text,paypassword text,phone text,userpic bolb,balance integer,addressid text);");
 		db.execSQL(
 				"create table address_info(addressid text primary key,province text,city text,country text,street text);");
 		db.execSQL(
-				"create table redpackage_info(redpackageid text primary key,amount integer,type text,starttime text,endtime text);");
+				"create table redpackage_info(redpackageid text primary key,amount integer,type text,phone text,starttime text,endtime text);");
 		db.execSQL(
 				"create table ordermeal_info(mealid text primary key,restaurantname text,mealname text,mealnum integer,mealmoney integer,restaurantid text);");
 		db.execSQL(
@@ -274,7 +274,17 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values.put("type", "管理员红包");
 		values.put("starttime", "1970-01-01");
 		values.put("endtime", "2100-12-31");
+		values.put("phone", "13915873770");
 		db.insert("redpackage_info", null, values);
+		
+		ContentValues values1 = new ContentValues();
+		values1.put("redpackageid", "501");
+		values1.put("amount", "500");
+		values1.put("type", "管理员红包");
+		values1.put("starttime", "1970-01-01");
+		values1.put("endtime", "2100-12-31");
+		values1.put("phone", "13915873770");
+		db.insert("redpackage_info", null, values1);
 	}
 
 	/**
@@ -312,7 +322,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values.put("userpic", getPicture(drawable));
 		values.put("balance", "10000");
 		values.put("addressid", "500");
-		values.put("redpackageid", "500");
 		db.insert("person_info", null, values);
 	}
 

@@ -83,6 +83,11 @@ public class Aa_Title extends Fragment
 			mTextView.setText("Ö§¸¶ÃÜÂë");
 			mLayout.setVisibility(View.VISIBLE);
 		}
+		if (activity.getClass() == G_Hongbao.class )
+		{
+			mTextView.setText("ºì°ü");
+			mLayout.setVisibility(View.VISIBLE);
+		}
 		return view;
 	}
 

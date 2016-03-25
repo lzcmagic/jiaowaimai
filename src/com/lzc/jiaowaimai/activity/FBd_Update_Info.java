@@ -7,6 +7,7 @@ import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +20,7 @@ public class FBd_Update_Info extends Activity
 	private EditText ymmEdit, fmmEdit, smmEdit;
 	private Button confirmButton;
 	private String phone;
+	boolean IsPayExist;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -27,6 +29,7 @@ public class FBd_Update_Info extends Activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.fbd00_change_info);
 		phone = getIntent().getStringExtra("phone");
+		IsPayExist = getIntent().getBooleanExtra("IsPayExist", false);
 		initViews();
 	}
 
@@ -36,11 +39,39 @@ public class FBd_Update_Info extends Activity
 		fmmEdit = (EditText) this.findViewById(R.id.fbd_xinmima);
 		smmEdit = (EditText) this.findViewById(R.id.fbd_secondmima);
 		confirmButton = (Button) this.findViewById(R.id.fbd_button);
-		confirmButton.setOnClickListener(new OnClickListener()
+		if (IsPayExist )
 		{
+			ymmEdit.setVisibility(View.VISIBLE);
+			fmmEdit.setVisibility(View.VISIBLE);
+			smmEdit.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			ymmEdit.setVisibility(View.VISIBLE);
+			ymmEdit.setHint("请输入支付密码");
+			ymmEdit.setHintTextColor(Color.parseColor("#c0c0c0"));
+			fmmEdit.setVisibility(View.GONE);
+			smmEdit.setVisibility(View.GONE);
+		}
+		confirmButton.setOnClickListener(new PayButtonOnclickListener(IsPayExist));
 
-			@Override
-			public void onClick(View v)
+	}
+
+	/** 支付按钮的点击事件 */
+	private class PayButtonOnclickListener implements OnClickListener
+	{
+
+		boolean IsPayExist1;
+
+		public PayButtonOnclickListener(boolean IsPayExist)
+		{
+			this.IsPayExist1 = IsPayExist;
+		}
+
+		@Override
+		public void onClick(View v)
+		{
+			if (IsPayExist1 )
 			{
 				if (checkOriginPwdIsRight() )
 				{
@@ -50,6 +81,7 @@ public class FBd_Update_Info extends Activity
 								smmEdit.getText().toString());
 						ApplWork.CurrentUser.setPaypassword(smmEdit.getText().toString());
 						MyToast.show("修改支付密码成功！", FBd_Update_Info.this);
+						FBd_Update_Info.this.finish();
 					}
 					else
 					{
@@ -61,7 +93,15 @@ public class FBd_Update_Info extends Activity
 					MyToast.show("原密码输入不正确！", FBd_Update_Info.this);
 				}
 			}
-		});
+			else
+			{
+				SQLiteDao.update(FBd_Update_Info.this, phone, "paypassword", ymmEdit.getText().toString());
+				ApplWork.CurrentUser.setPaypassword(ymmEdit.getText().toString());
+				MyToast.show("支付密码设置成功！", FBd_Update_Info.this);
+				FBd_Update_Info.this.finish();
+			}
+		}
+
 	}
 
 	/** 检查原密码是否正确 */

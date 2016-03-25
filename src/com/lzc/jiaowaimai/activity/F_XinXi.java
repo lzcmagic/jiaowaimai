@@ -1,10 +1,16 @@
 package com.lzc.jiaowaimai.activity;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,15 +27,24 @@ public class F_XinXi extends Activity
 
 	private ImageView tx_image;
 	private TextView username, userphone;
-
 	private LinearLayout InfoLayout;
+
+	/** 余额 */
+	private TextView tv_JinE;
+	/** 红包个数 */
+	private TextView tv_HongBao;
+	/** 积分 */
+	private TextView tv_JiFen;
+
+	private List<String> hongbaoInfo;
+
+	private LinearLayout hongbaolayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.f00_xinxi);
-
 	}
 
 	@Override
@@ -73,12 +88,59 @@ public class F_XinXi extends Activity
 			username.setText("登录/注册");
 			userphone.setText("");
 		}
-		else 
+		else
 		{
 			tx_image.setClickable(true);
 			tx_image.setImageBitmap(ApplWork.CurrentUser.getUserpic());
 			username.setText(ApplWork.CurrentUser.getUsername());
 			userphone.setText(ApplWork.CurrentUser.getPhone());
+		}
+
+		tv_JinE = (TextView) findViewById(R.id.tv_jine);
+		tv_HongBao = (TextView) findViewById(R.id.tv_hongbao);
+		tv_JiFen = (TextView) findViewById(R.id.tv_jifen);
+		if (ApplWork.CurrentUser != null )
+		{
+			hongbaoInfo = new ArrayList<String>();
+			tv_JinE.setText(String.valueOf(ApplWork.CurrentUser.getBalance()));
+			Cursor cursor = SQLiteDao.query(F_XinXi.this, "redpackage_info", ApplWork.CurrentUser.getPhone());
+			if (cursor.moveToFirst() )
+			{
+				do
+				{
+					String redpackageid = cursor.getString(cursor.getColumnIndex("redpackageid"));
+					int amount = cursor.getInt(cursor.getColumnIndex("amount"));
+					String type = cursor.getString(cursor.getColumnIndex("type"));
+					String starttime = cursor.getString(cursor.getColumnIndex("starttime"));
+					String endtime = cursor.getString(cursor.getColumnIndex("endtime"));
+					hongbaoInfo.add(redpackageid + "," + String.valueOf(amount) + "," + type + "," + starttime
+							+ "," + endtime);
+				} while (cursor.moveToNext());
+			}
+			tv_HongBao.setText(String.valueOf(hongbaoInfo.size()));
+		}
+		else
+		{
+			tv_HongBao.setText("0");
+			tv_JiFen.setText("0");
+			tv_JinE.setText("0.00");
+		}
+
+		hongbaolayout = (LinearLayout) findViewById(R.id.hongbaolayout);
+		hongbaolayout.setOnClickListener(new HongbaoLayoutOnclick());
+	}
+
+	/** 红包的点击事件 */
+	private class HongbaoLayoutOnclick implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			Intent intent = new Intent();
+			intent.setClass(F_XinXi.this, G_Hongbao.class);
+			intent.putExtra("hongbaoinfo", (Serializable) hongbaoInfo);
+			startActivity(intent);
 		}
 
 	}

@@ -1,6 +1,7 @@
 package com.lzc.jiaowaimai.activity;
 
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.bean.CurrentUser;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 import com.lzc.jiaowaimai.activity.utils.MyToast;
 import com.lzc.jiaowaimai.framework.ApplWork;
@@ -55,7 +56,7 @@ public class Fa_Login extends Activity
 					String password = cursor.getString(cursor.getColumnIndex("password"));
 					if (Fa_Login.this.password.getText().toString().equals(password) )
 					{
-						MyToast.show("登录成功！", getApplicationContext());
+						ApplWork.CurrentUser = new CurrentUser();
 						ApplWork.CurrentUser.setPassword(password);
 						String userid = cursor.getString(cursor.getColumnIndex("userid"));
 						ApplWork.CurrentUser.setUserid(userid);
@@ -73,10 +74,9 @@ public class Fa_Login extends Activity
 						ApplWork.CurrentUser.setBalance(balance);
 						String addressid = cursor.getString(cursor.getColumnIndex("addressid"));
 						ApplWork.CurrentUser.setAddressid(addressid);
-						String redpackageid = cursor.getString(cursor.getColumnIndex("redpackageid"));
-						ApplWork.CurrentUser.setRedpackageid(redpackageid);
 						String paypassword = cursor.getString(cursor.getColumnIndex("paypassword"));
 						ApplWork.CurrentUser.setPaypassword(paypassword);
+						MyToast.show("登录成功！", getApplicationContext());
 						Fa_Login.this.finish();
 					}
 					else

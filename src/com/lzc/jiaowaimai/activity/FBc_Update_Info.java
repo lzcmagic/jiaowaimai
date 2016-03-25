@@ -50,6 +50,7 @@ public class FBc_Update_Info extends Activity
 								smmEdit.getText().toString());
 						ApplWork.CurrentUser.setPassword(smmEdit.getText().toString());
 						MyToast.show("ÐÞ¸ÄµÇÂ¼ÃÜÂë³É¹¦£¡", FBc_Update_Info.this);
+						FBc_Update_Info.this.finish();
 					}
 					else
 					{
