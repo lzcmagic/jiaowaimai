@@ -8,12 +8,14 @@ import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 import kankan.wheel.widget.WheelView;
 
 public class Ha_ListItem extends Activity
 {
-	private TextView name, phone;
+	private TextView phone;
+	private EditText name;
 	private WheelView province, city, country;
 
 	@Override
@@ -30,7 +32,7 @@ public class Ha_ListItem extends Activity
 		{
 			e.printStackTrace();
 		}
-		name = (TextView) findViewById(R.id.hi_name);
+		name = (EditText) findViewById(R.id.hi_name);
 		phone = (TextView) findViewById(R.id.hi_phone);
 		phone.setText(ApplWork.CurrentUser.getPhone());
 		province = (WheelView) findViewById(R.id.province);

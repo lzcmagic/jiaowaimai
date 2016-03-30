@@ -18,7 +18,7 @@
             android:textColor="#777777"
             android:textSize="14sp" />
 
-        <TextView
+        <EditText
             android:id="@+id/hi_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
