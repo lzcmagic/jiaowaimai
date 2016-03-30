@@ -77,6 +77,30 @@
             android:name="com.lzc.jiaowaimai.activity.G_Hongbao"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.H_Address"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.Ha_ListItem"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.I_Collect"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.J_FoodInfo"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.K_JifenShop"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.L_PingfenInfo"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

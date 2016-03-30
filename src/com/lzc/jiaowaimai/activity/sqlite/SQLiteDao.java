@@ -9,7 +9,7 @@ public class SQLiteDao
 {
 
 	/**
-	 * 查找用户
+	 * 查找属于这个用户的对应表的信息
 	 * 
 	 * @return
 	 */

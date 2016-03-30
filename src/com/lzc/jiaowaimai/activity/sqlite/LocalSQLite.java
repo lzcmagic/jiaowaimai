@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 /** 本地数据表 */
 public class LocalSQLite extends SQLiteOpenHelper
 {
-	public static final int VERSION = 9;
+	public static final int VERSION = 10;
 	public static final String BD_NAME = "jiaowaimai.db";
 
 	private Context mContext;
@@ -32,9 +32,9 @@ public class LocalSQLite extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db)
 	{
 		db.execSQL(
-				"create table person_info (userid text primary key,username text,password text,paypassword text,phone text,userpic bolb,balance integer,addressid text);");
+				"create table person_info (userid text primary key,username text,password text,paypassword text,phone text,userpic bolb,balance integer);");
 		db.execSQL(
-				"create table address_info(addressid text primary key,province text,city text,country text,street text);");
+				"create table address_info(addressid text primary key,province text,city text,country text,street text,phone text);");
 		db.execSQL(
 				"create table redpackage_info(redpackageid text primary key,amount integer,type text,phone text,starttime text,endtime text);");
 		db.execSQL(
@@ -276,7 +276,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values.put("endtime", "2100-12-31");
 		values.put("phone", "13915873770");
 		db.insert("redpackage_info", null, values);
-		
+
 		ContentValues values1 = new ContentValues();
 		values1.put("redpackageid", "501");
 		values1.put("amount", "500");
@@ -301,6 +301,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values.put("city", "常州市");
 		values.put("country", "溧阳县");
 		values.put("street", "社渚镇农贸市场北楼");
+		values.put("phone", "13915873770");
 		db.insert("address_info", null, values);
 	}
 
@@ -321,7 +322,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values.put("phone", "13915873770");
 		values.put("userpic", getPicture(drawable));
 		values.put("balance", "10000");
-		values.put("addressid", "500");
 		db.insert("person_info", null, values);
 	}
 

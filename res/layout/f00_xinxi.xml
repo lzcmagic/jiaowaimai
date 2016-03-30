@@ -89,6 +89,7 @@
                 android:orientation="horizontal" >
 
                 <LinearLayout
+                    android:id="@+id/jinelayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -210,6 +211,7 @@
                 android:orientation="vertical" >
 
                 <LinearLayout
+                    android:id="@+id/addresslayout"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
@@ -229,6 +231,7 @@
                     android:background="#cccccc" />
 
                 <LinearLayout
+                    android:id="@+id/CollectLayout"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
@@ -248,6 +251,7 @@
                     android:background="#cccccc" />
 
                 <LinearLayout
+                    android:id="@+id/FoodLayout"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
@@ -270,6 +274,7 @@
                 android:orientation="vertical" >
 
                 <LinearLayout
+                    android:id="@+id/jifenlayout"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
@@ -289,6 +294,7 @@
                     android:background="#cccccc" />
 
                 <LinearLayout
+                    android:id="@+id/pinfenlayout"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"

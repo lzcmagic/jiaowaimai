@@ -38,7 +38,7 @@ public class F_XinXi extends Activity
 
 	private List<String> hongbaoInfo;
 
-	private LinearLayout hongbaolayout;
+	private LinearLayout hongbaolayout, addresslayout, CollectLayout, FoodLayout, jifenlayout, pinfenlayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -128,6 +128,140 @@ public class F_XinXi extends Activity
 
 		hongbaolayout = (LinearLayout) findViewById(R.id.hongbaolayout);
 		hongbaolayout.setOnClickListener(new HongbaoLayoutOnclick());
+
+		addresslayout = (LinearLayout) findViewById(R.id.addresslayout);
+		addresslayout.setOnClickListener(new AddressLayoutOnclik());
+
+		CollectLayout = (LinearLayout) findViewById(R.id.CollectLayout);
+		CollectLayout.setOnClickListener(new CollectOnClick());
+
+		FoodLayout = (LinearLayout) findViewById(R.id.FoodLayout);
+		FoodLayout.setOnClickListener(new FoodOnClick());
+
+		jifenlayout = (LinearLayout) findViewById(R.id.jifenlayout);
+		jifenlayout.setOnClickListener(new JifenLayout());
+
+		pinfenlayout = (LinearLayout) findViewById(R.id.pinfenlayout);
+		pinfenlayout.setOnClickListener(new PinfenOnclick());
+	}
+
+	/** 评分 */
+	private class PinfenOnclick implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			if (ApplWork.CurrentUser != null )
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, L_PingfenInfo.class);
+				startActivity(intent);
+			}
+			else
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, Fa_Login.class);
+				startActivity(intent);
+
+			}
+		}
+
+	}
+
+	/** 积分商城 */
+	private class JifenLayout implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			if (ApplWork.CurrentUser != null )
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, K_JifenShop.class);
+				startActivity(intent);
+
+			}
+			else
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, Fa_Login.class);
+				startActivity(intent);
+
+			}
+		}
+
+	}
+
+	/** 美食相册 */
+	private class FoodOnClick implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			if (ApplWork.CurrentUser != null )
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, J_FoodInfo.class);
+				startActivity(intent);
+			}
+			else
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, Fa_Login.class);
+				startActivity(intent);
+
+			}
+		}
+
+	}
+
+	/** 我的收藏信息栏 */
+	private class CollectOnClick implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			if (ApplWork.CurrentUser != null )
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, I_Collect.class);
+				startActivity(intent);
+			}
+			else
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, Fa_Login.class);
+				startActivity(intent);
+			}
+		}
+
+	}
+
+	/** 地址信息栏 */
+	private class AddressLayoutOnclik implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			if (ApplWork.CurrentUser != null )
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, H_Address.class);
+				startActivity(intent);
+			}
+			else
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, Fa_Login.class);
+				startActivity(intent);
+			}
+		}
+
 	}
 
 	/** 红包的点击事件 */
@@ -137,10 +271,19 @@ public class F_XinXi extends Activity
 		@Override
 		public void onClick(View v)
 		{
-			Intent intent = new Intent();
-			intent.setClass(F_XinXi.this, G_Hongbao.class);
-			intent.putExtra("hongbaoinfo", (Serializable) hongbaoInfo);
-			startActivity(intent);
+			if (ApplWork.CurrentUser != null )
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, G_Hongbao.class);
+				intent.putExtra("hongbaoinfo", (Serializable) hongbaoInfo);
+				startActivity(intent);
+			}
+			else
+			{
+				Intent intent = new Intent();
+				intent.setClass(F_XinXi.this, Fa_Login.class);
+				startActivity(intent);
+			}
 		}
 
 	}

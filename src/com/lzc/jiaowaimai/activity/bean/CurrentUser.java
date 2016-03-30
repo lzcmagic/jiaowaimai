@@ -10,7 +10,6 @@ public class CurrentUser
 	String password;
 	String phone;
 	int balance;
-	String addressid;
 	String paypassword;
 
 	public String getPaypassword()
@@ -81,16 +80,6 @@ public class CurrentUser
 	public void setBalance(int balance)
 	{
 		this.balance = balance;
-	}
-
-	public String getAddressid()
-	{
-		return addressid;
-	}
-
-	public void setAddressid(String addressid)
-	{
-		this.addressid = addressid;
 	}
 
 }

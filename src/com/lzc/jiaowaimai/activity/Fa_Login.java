@@ -72,8 +72,6 @@ public class Fa_Login extends Activity
 						}
 						int balance = cursor.getInt(cursor.getColumnIndex("balance"));
 						ApplWork.CurrentUser.setBalance(balance);
-						String addressid = cursor.getString(cursor.getColumnIndex("addressid"));
-						ApplWork.CurrentUser.setAddressid(addressid);
 						String paypassword = cursor.getString(cursor.getColumnIndex("paypassword"));
 						ApplWork.CurrentUser.setPaypassword(paypassword);
 						MyToast.show("µÇÂ¼³É¹¦£¡", getApplicationContext());
