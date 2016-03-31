@@ -33,4 +33,20 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/layout_insert"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/layout_button"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/btn_insert"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/insert" />
+    </RelativeLayout>
+
 </RelativeLayout>

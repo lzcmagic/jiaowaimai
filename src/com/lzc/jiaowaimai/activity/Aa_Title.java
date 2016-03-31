@@ -4,10 +4,12 @@ import com.lzc.jiaowaimai.R;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebView.FindListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ public class Aa_Title extends Fragment
 {
 	private RelativeLayout mLayout;
 	private TextView mTextView;
+	private RelativeLayout insertLayout;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -32,6 +35,18 @@ public class Aa_Title extends Fragment
 			}
 		});
 		mTextView = (TextView) view.findViewById(R.id.tv_title);
+		insertLayout = (RelativeLayout) view.findViewById(R.id.layout_insert);
+		insertLayout.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent();
+				intent.setClass(getActivity().getApplicationContext(), Ha_ListItem.class);
+				startActivity(intent);
+			}
+		});
 		Activity activity = getActivity();
 		if (activity.getClass() == C_WaiMai.class )
 		{
@@ -88,6 +103,13 @@ public class Aa_Title extends Fragment
 			mTextView.setText("红包");
 			mLayout.setVisibility(View.VISIBLE);
 		}
+		if (activity.getClass() == H_Address.class )
+		{
+			insertLayout.setVisibility(View.VISIBLE);
+			mTextView.setText("收货地址");
+			mLayout.setVisibility(View.VISIBLE);
+		}
+
 		return view;
 	}
 

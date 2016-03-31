@@ -32,8 +32,13 @@ public class H_Address extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getData();
 		setContentView(R.layout.h00_address);
+	}
+
+	@Override
+	protected void onResume()
+	{
+		getData();
 		mListView = (ListView) findViewById(R.id.HQ_List);
 		mListView.setAdapter(new BaseAdapter()
 		{
@@ -80,17 +85,7 @@ public class H_Address extends Activity
 				return AddressInfos.size();
 			}
 		});
-		mListView.setOnItemClickListener(new OnItemClickListener()
-		{
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-			{
-				Intent intent = new Intent();
-				intent.setClass(H_Address.this, Ha_ListItem.class);
-				startActivity(intent);
-			}
-		});
+		super.onResume();
 	}
 
 	private void getData()

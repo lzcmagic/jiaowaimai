@@ -34,6 +34,21 @@ public class SQLiteDao
 		db.insert("person_info", null, values);
 	}
 
+	public static void insertAddress(Context context, String province, String city, String country,
+			String street, String phone)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("addressid", String.valueOf((int) ((Math.random() * 9 + 1) * 100)));
+		values.put("province", province);
+		values.put("city", city);
+		values.put("country", country);
+		values.put("street", street);
+		values.put("phone", phone);
+		db.insert("address_info", null, values);
+	}
+
 	/** É¾³ý */
 	public static void delete()
 	{

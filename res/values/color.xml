@@ -5,5 +5,6 @@
     <color name="yellow">#F79307</color>
     <color name="pressed">#A2CD5A</color>
     <color name="normal">#9ACD32</color>
+    <color name="layout">#008DE1</color>
 
 </resources>
