@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/layout_bg"
     android:orientation="vertical" >
 
     <ImageView
@@ -13,9 +14,10 @@
     <TextView
         android:id="@+id/di02"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginLeft="6dp"
         android:layout_toRightOf="@id/di01"
+        android:gravity="center_vertical"
         android:text="喵小咪特色便当 "
         android:textSize="16sp" />
 
@@ -39,11 +41,12 @@
     <TextView
         android:id="@+id/di03"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_below="@id/view1"
         android:layout_marginLeft="66dp"
         android:layout_marginTop="5dp"
         android:ellipsize="marquee"
+        android:gravity="center_vertical"
         android:text="龙虾饭" />
 
     <LinearLayout
@@ -87,23 +90,5 @@
             android:text="57"
             android:textStyle="bold" />
     </LinearLayout>
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/layout1"
-        android:layout_marginTop="5dp"
-        android:background="#cccccc" />
-
-    <Button
-        android:id="@+id/di06"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/view2"
-        android:layout_marginRight="3dp"
-        android:text="再来一单"
-        android:textSize="16sp" />
 
 </RelativeLayout>

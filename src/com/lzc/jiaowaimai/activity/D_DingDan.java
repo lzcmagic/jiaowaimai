@@ -15,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -120,7 +119,6 @@ public class D_DingDan extends Activity
 				hold.numText = (TextView) convertView.findViewById(R.id.di04);
 				hold.moneyText = (TextView) convertView.findViewById(R.id.di05);
 				hold.content = (TextView) convertView.findViewById(R.id.di03);
-				hold.againButton = (Button) findViewById(R.id.di06);
 				convertView.setTag(hold);
 			}
 			else
@@ -144,7 +142,6 @@ public class D_DingDan extends Activity
 		public TextView numText;
 		public TextView moneyText;
 		public TextView content;
-		public Button againButton;
 	}
 
 	@Override
