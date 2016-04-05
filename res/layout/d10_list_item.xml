@@ -21,13 +21,13 @@
         android:text="喵小咪特色便当 "
         android:textSize="16sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:layout_width="26dp"
+        android:layout_height="20dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="12dp"
         android:layout_toRightOf="@id/di02"
-        android:text=">"
-        android:textSize="16sp" />
+        android:src="@drawable/a01_goo" />
 
     <View
         android:id="@+id/view1"
