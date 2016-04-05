@@ -2,7 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical" >
-    
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:text="店铺评价："
+        android:textSize="20sp" />
+
+    <RatingBar
+        android:id="@+id/cd_ratingbar"
+        style="@android:attr/ratingBarStyleIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:stepSize="1.0" />
+
+    <TextView
+        android:id="@+id/cd_ratingtext"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="得分：0"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/cd_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="16dp"
+        android:background="#008DE1"
+        android:gravity="center"
+        android:text="提交"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
 
 </LinearLayout>

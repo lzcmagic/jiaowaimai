@@ -8,10 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <ImageView
+        <com.lzc.jiaowaimai.activity.view.RoundedImageView
             android:id="@+id/canzhong_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:contentDescription="@null"
             android:src="@drawable/ic_launcher" />
 
         <LinearLayout
@@ -38,40 +39,18 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
-                <Button
-                    android:id="@+id/puls"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
-                    android:focusable="false"
-                    android:text="+"
-                    android:textSize="12sp" />
-
                 <TextView
-                    android:id="@+id/cb_fenshu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/puls"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_toLeftOf="@id/puls"
-                    android:text="1"
-                    android:textColor="@android:color/holo_red_light"
-                    android:textSize="16sp" >
-                </TextView>
-
-                <Button
-                    android:id="@+id/minus"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_toLeftOf="@id/cb_fenshu"
-                    android:focusable="false"
-                    android:text="-"
-                    android:textSize="12sp" />
+                    android:id="@+id/goorder"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:text="去点餐"
+                    android:textSize="12sp"
+                    android:typeface="monospace" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

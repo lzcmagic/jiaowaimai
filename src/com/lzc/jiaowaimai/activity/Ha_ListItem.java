@@ -229,7 +229,6 @@ public class Ha_ListItem extends Activity
 						{
 							String countryname = arraycountry.optString(k);
 							listcountry.add(countryname);
-							System.out.println("循环中的countryname" + countryname);
 						}
 						countrydata.put(citystr, listcountry);
 					}
@@ -302,6 +301,7 @@ public class Ha_ListItem extends Activity
 		country.setCurrentItem(list.size() / 2);
 	}
 
+	/** 县级数据适配器 */
 	private class CountryAdapter extends AbstractWheelTextAdapter
 	{
 		private List<String> CountryList;

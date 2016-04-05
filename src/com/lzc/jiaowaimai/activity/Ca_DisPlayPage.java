@@ -1,7 +1,10 @@
 package com.lzc.jiaowaimai.activity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.lzc.jiaowaimai.R;
 
@@ -39,8 +42,16 @@ public class Ca_DisPlayPage extends FragmentActivity
 
 	private ImageView dingdanImage, touxaingImage;
 
-	String[] array = null;
-	Bitmap bitmap;
+	private String[] array = null;
+	private Bitmap bitmap;
+	public String resid;
+	public String resname;
+
+	private TextView jiesuan;
+
+	public static List<Map<String, String>> OrderMealList = new ArrayList<Map<String, String>>();
+
+	public static List<Integer> OrderMealMoneyList = new ArrayList<Integer>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -48,31 +59,45 @@ public class Ca_DisPlayPage extends FragmentActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.ca_display);
-		System.out.println("*****" + getIntent().getStringExtra("currentres_info"));
 		array = getIntent().getStringExtra("currentres_info").split(",");
+		System.out.println(getIntent().getStringExtra("currentres_info"));
+		resname = array[1].split("=")[1];
 		bitmap = getIntent().getParcelableExtra("currentres_bitmap");
 		initViews();
+	}
+
+	@Override
+	protected void onResume()
+	{
+		jiesuan = (TextView) findViewById(R.id.ca_jiesuan);
+		int moneySum = 0;
+		for (int money : OrderMealMoneyList)
+		{
+			moneySum = moneySum + money;
+		}
+		jiesuan.setText("总计：" + String.valueOf(moneySum) + "元");
+		super.onResume();
 	}
 
 	@SuppressWarnings("deprecation")
 	private void initViews()
 	{
+		resid = array[0].split("=")[1];
 		touxaingImage = (ImageView) findViewById(R.id.cap02);
 		touxaingImage.setImageBitmap(bitmap);
 
-		String[] newArray = array[0].split("=");
-		System.out.println("newArray" + newArray[1]);
+		String[] newArray = array[1].split("=");
 		cal01 = (TextView) findViewById(R.id.cal01);
 		cal01.setText(newArray[1]);
 
 		ca_qisong = (TextView) findViewById(R.id.ca_qisong);
-		ca_qisong.setText(array[1].split("=")[1] + "元起送");
+		ca_qisong.setText(array[2].split("=")[1] + "元起送");
 
 		ca_peisong = (TextView) findViewById(R.id.ca_peisong);
-		ca_peisong.setText(array[2].split("=")[1] + "元配送费");
+		ca_peisong.setText(array[3].split("=")[1] + "元配送费");
 
 		ca_runspeed = (TextView) findViewById(R.id.ca_runspeed);
-		ca_runspeed.setText(array[6].split("=")[1] + "分钟内送达");
+		ca_runspeed.setText(array[7].split("=")[1] + "分钟内送达");
 
 		listFrament = new ArrayList<Fragment>();
 		listFrament.add(new Cb_ShangPin());
@@ -132,17 +157,32 @@ public class Ca_DisPlayPage extends FragmentActivity
 		// dialog参数设置
 		// 先得到构造器
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("提示"); // 设置标题
+		builder.setTitle("已选择"); // 设置标题
 		// builder.setMessage("是否确认退出?"); //设置内容
 		builder.setIcon(R.drawable.ic_launcher);// 设置图标，图片id即可
 		// 设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
+
+		List<String> list = new ArrayList<String>();
+		for (int i = 0; i < OrderMealList.size(); i++)
+		{
+			Map<String, String> map = OrderMealList.get(i);
+			Iterator<Entry<String, String>> iterator = map.entrySet().iterator();
+			while (iterator.hasNext())
+			{
+				Entry<String, String> entry = iterator.next();
+				String name = entry.getKey();
+				String num = entry.getValue();
+				list.add(name + "\t\t\t" + num + "份");
+			}
+
+		}
+		candans = list.toArray(new String[list.size()]);
 		builder.setItems(candans, new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				dialog.dismiss();
-
+				// dialog.dismiss();
 			}
 		});
 		builder.create().show();

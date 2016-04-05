@@ -22,6 +22,15 @@ public class SQLiteDao
 		return cursor;
 	}
 
+	public static Cursor queryMenu(Context context, String resid)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getReadableDatabase();
+		Cursor cursor = db.rawQuery("select * from menu_info where restaurantid='" + resid + "'", null);
+		return cursor;
+
+	}
+
 	/** 注册时插入 新用户数据 */
 	public static void insert(Context context, String phone, String password)
 	{
@@ -34,6 +43,22 @@ public class SQLiteDao
 		db.insert("person_info", null, values);
 	}
 
+	public static void insertMenu(Context context, String restaurantname, String mealname, String mealnum,
+			int mealmoney, String phone)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("mealid", String.valueOf((int) ((Math.random() * 9 + 1) * 1000)));
+		values.put("restaurantname", restaurantname);
+		values.put("mealname", mealname);
+		values.put("mealnum", mealnum);
+		values.put("mealmoney", mealmoney);
+		values.put("phone", phone);
+		db.insert("ordermeal_info", null, values);
+	}
+
+	/** 插入地址 */
 	public static void insertAddress(Context context, String province, String city, String country,
 			String street, String phone)
 	{
@@ -47,6 +72,20 @@ public class SQLiteDao
 		values.put("street", street);
 		values.put("phone", phone);
 		db.insert("address_info", null, values);
+	}
+
+	/* 插入头像 **/
+	public static void insertPhoto(Context context, String phone, String time, byte[] bs)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put("albumid", String.valueOf((int) ((Math.random() * 9 + 1) * 10000)));
+		values.put("image", bs);
+		values.put("time", time);
+		values.put("phone", phone);
+		db.insert("food_album", null, values);
 	}
 
 	/** 删除 */
@@ -69,6 +108,21 @@ public class SQLiteDao
 			phone
 		};
 		db.update("person_info", values, whereClause, whereArgs);
+	}
+
+	/** 更新菜馆信息 */
+	public static void updateResScore(Context context, String restaurantid, String key, String value)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(key, value);
+		String whereClause = "restaurantid=?";
+		String[] whereArgs = new String[]
+		{
+			restaurantid
+		};
+		db.update("restaurant_info", values, whereClause, whereArgs);
 	}
 
 	/** 修改用户图片 */

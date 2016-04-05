@@ -1,24 +1,28 @@
 package com.lzc.jiaowaimai.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-@SuppressWarnings("unused")
 public class Cb_ShangPin extends Fragment
 {
 
@@ -26,20 +30,51 @@ public class Cb_ShangPin extends Fragment
 
 	private ShangPinAdapter adapter;
 	int cout;
+	String resid;
+	String resname;
+	private Context mContext;
+	private List<MenuBean> menuList;
 
-	private Handler mHandler = new Handler()
+	@Override
+	public void onAttach(Context context)
 	{
-		@SuppressWarnings("static-access")
-		public void handleMessage(android.os.Message msg)
-		{
-			View view = mListView.getChildAt(0).inflate(getContext(), R.layout.cb10_shangpin_item, null);
-			TextView textView = (TextView) view.findViewById(R.id.cb_fenshu);
-			textView.setText(String.valueOf(msg.getData().getInt("count")));
-			System.out.println(msg.getData().getInt("position") + "----" + msg.getData().getInt("count"));
-		};
-	};
+		this.mContext = context;
+		Ca_DisPlayPage parentActivity = (Ca_DisPlayPage) getActivity();
+		this.resid = parentActivity.resid;
+		this.resname = parentActivity.resname;
+		super.onAttach(context);
+	}
 
-	@SuppressWarnings("static-access")
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		Cursor cursor = SQLiteDao.queryMenu(mContext, resid);
+		menuList = new ArrayList<MenuBean>();
+		if (cursor.moveToFirst() )
+		{
+			do
+			{
+				MenuBean bean = new MenuBean();
+				String menuid = cursor.getString(cursor.getColumnIndex("menuid"));
+				bean.setMenuid(menuid);
+				String name = cursor.getString(cursor.getColumnIndex("name"));
+				bean.setName(name);
+				String price = cursor.getString(cursor.getColumnIndex("price"));
+				bean.setPrice(price);
+				byte[] bs = cursor.getBlob(cursor.getColumnIndex("image"));
+				bean.setImage(bs);
+				String resid = cursor.getString(cursor.getColumnIndex("restaurantid"));
+				bean.setRestaurantid(resid);
+				menuList.add(bean);
+			} while (cursor.moveToNext());
+		}
+		if (!cursor.isClosed() )
+		{
+			cursor.close();
+		}
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -53,12 +88,16 @@ public class Cb_ShangPin extends Fragment
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-
-				View view1 = mListView.getChildAt(position).inflate(getContext(), R.layout.cb10_shangpin_item,
-						null);
-				TextView textView = (TextView) view1.findViewById(R.id.cb_fenshu);
-				textView.setText(String.valueOf(cout++));
-				System.out.println("posi----" + "zhixingdaole");
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inSampleSize = 2;
+				byte[] bs = menuList.get(position).getImage();
+				Bitmap bitmap = BitmapFactory.decodeByteArray(bs, 0, bs.length, options);
+				Intent intent = new Intent();
+				intent.setClass(mContext, Cba_OrderDetels.class);
+				intent.putExtra("resname", resname);
+				intent.putExtra("info", menuList.get(position).toString());
+				intent.putExtra("menuimage", bitmap);
+				startActivity(intent);
 			}
 		});
 		return view;
@@ -66,9 +105,7 @@ public class Cb_ShangPin extends Fragment
 
 	private class ShangPinAdapter extends BaseAdapter
 	{
-		int count = 0;
 		private LayoutInflater mInflater;
-		int Posi;
 
 		public ShangPinAdapter(Context context)
 		{
@@ -79,7 +116,7 @@ public class Cb_ShangPin extends Fragment
 		@Override
 		public int getCount()
 		{
-			return 10;
+			return menuList.size();
 		}
 
 		@Override
@@ -111,11 +148,6 @@ public class Cb_ShangPin extends Fragment
 				hold.cb_image = (ImageView) convertView.findViewById(R.id.canzhong_image);
 				hold.cb_Text = (TextView) convertView.findViewById(R.id.canzhong_name);
 				hold.cb_price = (TextView) convertView.findViewById(R.id.canzhong_price);
-				hold.puls_button = (Button) convertView.findViewById(R.id.puls);
-				hold.minus_button = (Button) convertView.findViewById(R.id.minus);
-				hold.cb_fenshu = (TextView) convertView.findViewById(R.id.cb_fenshu);
-				hold.cb_fenshu.setTag(position);
-				hold.cb_fenshu.setText(String.valueOf(count));
 				convertView.setTag(hold);
 			}
 			else
@@ -123,27 +155,10 @@ public class Cb_ShangPin extends Fragment
 				hold = (ViewHoler) convertView.getTag();
 			}
 
-			hold.puls_button.setOnClickListener(new OnClickListener()
-			{
-				@SuppressWarnings("static-access")
-				@Override
-				public void onClick(View v)
-				{
-
-					count++;
-
-					View view = mListView.getChildAt(1).inflate(getContext(), R.layout.cb10_shangpin_item,
-							null);
-					TextView textView = (TextView) view.findViewById(R.id.cb_fenshu);
-					textView.setText(String.valueOf(count));
-					// Bundle bundle = new Bundle();
-					// bundle.putInt("position", 12);
-					// bundle.putInt("count", count);
-					// Message message = new Message();
-					// message.setData(bundle);
-					// mHandler.sendMessage(message);
-				}
-			});
+			byte[] bs = menuList.get(position).getImage();
+			hold.cb_image.setImageBitmap(BitmapFactory.decodeByteArray(bs, 0, bs.length));
+			hold.cb_Text.setText(menuList.get(position).getName());
+			hold.cb_price.setText("¥" + menuList.get(position).getPrice());
 			return convertView;
 		}
 
@@ -154,8 +169,72 @@ public class Cb_ShangPin extends Fragment
 		ImageView cb_image;
 		TextView cb_Text;
 		TextView cb_price;
-		Button puls_button;
-		Button minus_button;
-		TextView cb_fenshu;
+	}
+
+	class MenuBean
+	{
+		String menuid;
+		String name;
+		String price;
+		byte[] image;
+		String restaurantid;
+
+		public String getMenuid()
+		{
+			return menuid;
+		}
+
+		public void setMenuid(String menuid)
+		{
+			this.menuid = menuid;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+
+		public String getPrice()
+		{
+			return price;
+		}
+
+		public void setPrice(String price)
+		{
+			this.price = price;
+		}
+
+		public byte[] getImage()
+		{
+			return image;
+		}
+
+		public void setImage(byte[] image)
+		{
+			this.image = image;
+		}
+
+		public String getRestaurantid()
+		{
+			return restaurantid;
+		}
+
+		public void setRestaurantid(String restaurantid)
+		{
+			this.restaurantid = restaurantid;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "menuid=" + menuid + ", name=" + name + ", price=" + price + ", restaurantid="
+					+ restaurantid;
+		}
+
 	}
 }

@@ -114,6 +114,16 @@ public class Aa_Title extends Fragment
 			mTextView.setText("美食相册");
 			mLayout.setVisibility(View.VISIBLE);
 		}
+		if (activity.getClass() == L_PingfenInfo.class )
+		{
+			mTextView.setText("评分");
+			mLayout.setVisibility(View.VISIBLE);
+		}
+		if (activity.getClass() == Ca_DisPlayPage.class )
+		{
+			mTextView.setText("店铺");
+			mLayout.setVisibility(View.VISIBLE);
+		}
 
 		return view;
 	}

@@ -50,7 +50,7 @@
         android:textSize="16sp" />
 
     <RatingBar
-        android:id="@+id/ratingBar1"
+        android:id="@+id/ratingBar11"
         style="@style/ratingbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,9 +67,9 @@
         android:id="@+id/tv_fenshu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ratingBar1"
+        android:layout_alignBottom="@id/ratingBar11"
         android:layout_marginLeft="3dp"
-        android:layout_toRightOf="@id/ratingBar1"
+        android:layout_toRightOf="@id/ratingBar11"
         android:text="4.2"
         android:textColor="@android:color/holo_red_light"
         android:textSize="12sp" />
@@ -78,7 +78,7 @@
         android:id="@+id/yueshou"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ratingBar1"
+        android:layout_alignBottom="@id/ratingBar11"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/tv_fenshu"
         android:text="月售"
@@ -88,7 +88,7 @@
         android:id="@+id/tv_danshu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ratingBar1"
+        android:layout_alignBottom="@id/ratingBar11"
         android:layout_toRightOf="@id/yueshou"
         android:text="10"
         android:textSize="10sp" />
@@ -96,7 +96,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ratingBar1"
+        android:layout_alignBottom="@id/ratingBar11"
         android:layout_toRightOf="@id/tv_danshu"
         android:text="单"
         android:textSize="10sp" />
@@ -105,7 +105,7 @@
         android:id="@+id/tv_peisongfei"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ratingBar1"
+        android:layout_alignBottom="@id/ratingBar11"
         android:layout_alignParentRight="true"
         android:text="¥2配送费"
         android:textSize="10sp" />

@@ -1,7 +1,6 @@
 package com.lzc.jiaowaimai.activity;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,8 +19,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,6 +38,14 @@ public class J_FoodInfo extends Activity
 	private List<Map<String, Bitmap>> foodlist;
 
 	private Button mButton;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.j00_foodcollect);
+	}
 
 	@Override
 	protected void onStart()
@@ -142,14 +147,6 @@ public class J_FoodInfo extends Activity
 		});
 
 		super.onResume();
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.j00_foodcollect);
 	}
 
 	private void getData()

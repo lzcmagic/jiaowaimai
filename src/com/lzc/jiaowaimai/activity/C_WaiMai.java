@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -118,6 +119,7 @@ public class C_WaiMai extends Activity
 	@Override
 	protected void onResume()
 	{
+		initOtherViews();
 		super.onResume();
 	}
 
@@ -152,8 +154,6 @@ public class C_WaiMai extends Activity
 			}
 		});
 		thread.start();
-
-		initOtherViews();
 	}
 
 	/** 初始化数据 */
@@ -287,6 +287,90 @@ public class C_WaiMai extends Activity
 		mListView.setOnItemClickListener(new ListViewItemClickListener());
 	}
 
+	/** adapter的数据 */
+	private void initSqlDataForSpinner(String typeText, String hotText)
+	{
+
+		LocalSQLite localSQLite = new LocalSQLite(getApplicationContext(), LocalSQLite.BD_NAME, null,
+				LocalSQLite.VERSION);
+		SQLiteDatabase data = localSQLite.getReadableDatabase();
+		Cursor cursor = null;
+		if (typeText.equals("分类") )
+		{
+			if (hotText.equals("排序") )
+			{
+				cursor = data.rawQuery("select * from restaurant_info", null);
+			}
+			else
+			{
+				if (hotText.equals("销量最高") || hotText.equals("评分最高") )
+				{
+					cursor = data.rawQuery(
+							"select * from restaurant_info order by " + map.get(hotText) + " desc", null);
+				}
+				else
+				{
+					cursor = data.rawQuery(
+							"select * from restaurant_info order by " + map.get(hotText) + " asc", null);
+				}
+			}
+		}
+		else
+		{
+			if (hotText.equals("排序") )
+			{
+				cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText + "'",
+						null);
+			}
+			else
+			{
+				if (hotText.equals("销量最高") || hotText.equals("评分最高") )
+				{
+					cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText
+							+ "'" + " order by " + map.get(hotText) + " desc", null);
+				}
+				else
+				{
+					cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText
+							+ "'" + " order by " + map.get(hotText) + " asc", null);
+				}
+			}
+
+		}
+		if (cursor.moveToFirst() )
+		{
+			do
+			{
+				IndexShow show = new IndexShow();
+				String resid = cursor.getString(cursor.getColumnIndex("restaurantid"));
+				show.setResid(resid);
+				byte[] bs = cursor.getBlob(cursor.getColumnIndex("canguanpic"));
+				// 将获得的byte数组转换成bitmap
+				Bitmap bitmap = BitmapFactory.decodeByteArray(bs, 0, bs.length, null);
+				show.setBitmap(bitmap);
+				String resname = cursor.getString(cursor.getColumnIndex("resname"));
+				show.setResname(resname);
+				int startrunmoney = cursor.getInt(cursor.getColumnIndex("startrunmoney"));
+				show.setStartrunmoney(startrunmoney);
+				String sales = cursor.getString(cursor.getColumnIndex("sales"));
+				show.setSales(sales);
+				int respeisong = cursor.getInt(cursor.getColumnIndex("respeisong"));
+				show.setRespeisong(respeisong);
+				String restype = cursor.getString(cursor.getColumnIndex("restype"));
+				show.setRestype(restype);
+				String score = cursor.getString(cursor.getColumnIndex("score"));
+				show.setScore(score);
+				String runspeed = cursor.getString(cursor.getColumnIndex("runspeed"));
+				show.setRunspeed(runspeed);
+				String resaddressid = cursor.getString(cursor.getColumnIndex("resaddressid"));
+				show.setResaddressid(resaddressid);
+				sqlList.add(show);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+
+	}
+
 	/** listView点击事件 */
 	private class ListViewItemClickListener implements OnItemClickListener
 	{
@@ -318,6 +402,10 @@ public class C_WaiMai extends Activity
 		TextView num_text;
 		/** 商户评分 */
 		TextView fenshu_text;
+		/** 展示评分的RatingBar */
+		RatingBar mRatingBar;
+		/** 评分 */
+		TextView score;
 	}
 
 	/** 主页ListView的适配器 */
@@ -363,6 +451,8 @@ public class C_WaiMai extends Activity
 				holder.peisongfei_text = (TextView) convertView.findViewById(R.id.tv_peisongfei);
 				holder.num_text = (TextView) convertView.findViewById(R.id.tv_danshu);
 				holder.fenshu_text = (TextView) convertView.findViewById(R.id.tv_fenshu);
+				holder.mRatingBar = (RatingBar) convertView.findViewById(R.id.ratingBar11);
+				holder.score = (TextView) convertView.findViewById(R.id.tv_fenshu);
 				convertView.setTag(holder);
 			}
 			else
@@ -376,6 +466,8 @@ public class C_WaiMai extends Activity
 					.setText("¥" + String.valueOf(sqlList.get(position).getRespeisong()) + "配送费");
 			holder.num_text.setText(sqlList.get(position).getSales());
 			holder.fenshu_text.setText(sqlList.get(position).getScore());
+			holder.mRatingBar.setRating(Float.parseFloat(sqlList.get(position).getScore()));
+			holder.score.setText(String.valueOf(sqlList.get(position).getScore()));
 			return convertView;
 		}
 
@@ -484,6 +576,8 @@ public class C_WaiMai extends Activity
 
 	class IndexShow
 	{
+		/** 餐馆主键 */
+		String resid;
 		/** 餐馆头像 */
 		Bitmap bitmap;
 		/** 餐馆名称 */
@@ -502,8 +596,6 @@ public class C_WaiMai extends Activity
 		String runspeed;
 		/** 餐馆地址id */
 		String resaddressid;
-		/** 餐馆菜单id */
-		String menuid;
 
 		public String getRunspeed()
 		{
@@ -550,16 +642,6 @@ public class C_WaiMai extends Activity
 			this.resaddressid = resaddressid;
 		}
 
-		public String getMenuid()
-		{
-			return menuid;
-		}
-
-		public void setMenuid(String menuid)
-		{
-			this.menuid = menuid;
-		}
-
 		public void setStartrunmoney(int startrunmoney)
 		{
 			this.startrunmoney = startrunmoney;
@@ -601,6 +683,16 @@ public class C_WaiMai extends Activity
 
 		}
 
+		public String getResid()
+		{
+			return resid;
+		}
+
+		public void setResid(String resid)
+		{
+			this.resid = resid;
+		}
+
 		public void setScore(String score)
 		{
 			this.score = score;
@@ -609,94 +701,10 @@ public class C_WaiMai extends Activity
 		@Override
 		public String toString()
 		{
-			return "resname=" + resname + ", startrunmoney=" + startrunmoney + ", respeisong=" + respeisong
-					+ ", sales=" + sales + ", restype=" + restype + ", score=" + score + ", runspeed="
-					+ runspeed + ", resaddressid=" + resaddressid + ", menuid=" + menuid;
+			return "resid=" + resid + ", resname=" + resname + ", startrunmoney=" + startrunmoney
+					+ ", respeisong=" + respeisong + ", sales=" + sales + ", restype=" + restype + ", score="
+					+ score + ", runspeed=" + runspeed + ", resaddressid=" + resaddressid;
 		}
-
-	}
-
-	/** adapter的数据 */
-	private void initSqlDataForSpinner(String typeText, String hotText)
-	{
-
-		LocalSQLite localSQLite = new LocalSQLite(getApplicationContext(), LocalSQLite.BD_NAME, null,
-				LocalSQLite.VERSION);
-		SQLiteDatabase data = localSQLite.getReadableDatabase();
-		Cursor cursor = null;
-		if (typeText.equals("分类") )
-		{
-			if (hotText.equals("排序") )
-			{
-				cursor = data.rawQuery("select * from restaurant_info", null);
-			}
-			else
-			{
-				if (hotText.equals("销量最高") || hotText.equals("评分最高") )
-				{
-					cursor = data.rawQuery(
-							"select * from restaurant_info order by " + map.get(hotText) + " desc", null);
-				}
-				else
-				{
-					cursor = data.rawQuery(
-							"select * from restaurant_info order by " + map.get(hotText) + " asc", null);
-				}
-			}
-		}
-		else
-		{
-			if (hotText.equals("排序") )
-			{
-				cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText + "'",
-						null);
-			}
-			else
-			{
-				if (hotText.equals("销量最高") || hotText.equals("评分最高") )
-				{
-					cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText
-							+ "'" + " order by " + map.get(hotText) + " desc", null);
-				}
-				else
-				{
-					cursor = data.rawQuery("select * from restaurant_info where restype=" + "'" + typeText
-							+ "'" + " order by " + map.get(hotText) + " asc", null);
-				}
-			}
-
-		}
-		if (cursor.moveToFirst() )
-		{
-			do
-			{
-				IndexShow show = new IndexShow();
-				byte[] bs = cursor.getBlob(cursor.getColumnIndex("canguanpic"));
-				// 将获得的byte数组转换成bitmap
-				Bitmap bitmap = BitmapFactory.decodeByteArray(bs, 0, bs.length, null);
-				show.setBitmap(bitmap);
-				String resname = cursor.getString(cursor.getColumnIndex("resname"));
-				show.setResname(resname);
-				int startrunmoney = cursor.getInt(cursor.getColumnIndex("startrunmoney"));
-				show.setStartrunmoney(startrunmoney);
-				String sales = cursor.getString(cursor.getColumnIndex("sales"));
-				show.setSales(sales);
-				int respeisong = cursor.getInt(cursor.getColumnIndex("respeisong"));
-				show.setRespeisong(respeisong);
-				String restype = cursor.getString(cursor.getColumnIndex("restype"));
-				show.setRestype(restype);
-				String score = cursor.getString(cursor.getColumnIndex("score"));
-				show.setScore(score);
-				String runspeed = cursor.getString(cursor.getColumnIndex("runspeed"));
-				show.setRunspeed(runspeed);
-				String resaddressid = cursor.getString(cursor.getColumnIndex("resaddressid"));
-				show.setResaddressid(resaddressid);
-				String menuid = cursor.getString(cursor.getColumnIndex("menuid"));
-				show.setMenuid(menuid);
-				sqlList.add(show);
-			} while (cursor.moveToNext());
-		}
-		cursor.close();
 
 	}
 

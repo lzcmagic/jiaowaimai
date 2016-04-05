@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:ellipsize="end"
         android:gravity="center"
         android:text=""
         android:textColor="#F000"

@@ -2,9 +2,15 @@ package com.lzc.jiaowaimai.activity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
+import com.lzc.jiaowaimai.activity.utils.MyToast;
+import com.lzc.jiaowaimai.framework.ApplWork;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,6 +26,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class Jb_TakePhoto extends Activity
 {
@@ -68,10 +75,69 @@ public class Jb_TakePhoto extends Activity
 	{
 		if (requestCode == 1 )
 		{
-			Bitmap bm = BitmapFactory.decodeFile(mOutputFile.getAbsolutePath() + "tmp");
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+			// 拍照
+			if (resultCode == RESULT_CANCELED )
+			{
+				Toast.makeText(Jb_TakePhoto.this, "拍照失败", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			// 拍照完了之后，就把这个裁剪一下
+			Intent intent = new Intent("com.android.camera.action.CROP");
+			intent.setDataAndType(Uri.fromFile(mOutputFile), "image/*");
+			// 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+			intent.putExtra("crop", "true");
+			// aspectX aspectY 是宽高的比例
+			intent.putExtra("aspectX", 16);
+			intent.putExtra("aspectY", 11);
+			// outputX outputY 是裁剪图片宽高
+			intent.putExtra("outputX", 160);
+			intent.putExtra("outputY", 110);
+			intent.putExtra(MediaStore.EXTRA_OUTPUT,
+					Uri.fromFile(new File(mOutputFile.getAbsoluteFile() + "tmp")));
+			startActivityForResult(intent, 2);
+
+		}
+		if (requestCode == 2 )
+		{
+			// 拍照完了之后的裁剪
+			if (resultCode == RESULT_CANCELED )
+			{
+				Toast.makeText(Jb_TakePhoto.this, "拍照裁剪失败", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			// 缩放
+			options.inSampleSize = 2;
+			Bitmap bm = BitmapFactory.decodeFile(mOutputFile.getAbsolutePath() + "tmp", options);
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			bm.compress(CompressFormat.PNG, 100, baos);
+			layout.setVisibility(View.VISIBLE);
+			btn_take.setVisibility(View.GONE);
 			imagView.setImageBitmap(bm);
+			commit.setOnClickListener(new OnClickListener()
+			{
+
+				@SuppressLint("SimpleDateFormat")
+				@Override
+				public void onClick(View v)
+				{
+					SQLiteDao.insertPhoto(Jb_TakePhoto.this, ApplWork.CurrentUser.getPhone(),
+							new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()), baos.toByteArray());
+					MyToast.show("保存成功", Jb_TakePhoto.this);
+					Jb_TakePhoto.this.finish();
+				}
+			});
+
+			cancel.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					Jb_TakePhoto.this.finish();
+				}
+			});
 		}
 	}
 }

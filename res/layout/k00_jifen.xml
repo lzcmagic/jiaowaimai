@@ -5,19 +5,14 @@
     android:orientation="vertical" >
 
     <fragment
-        android:id="@+id/HF00"
+        android:id="@+id/KF00"
         android:name="com.lzc.jiaowaimai.activity.Aa_Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ListView
-        android:id="@+id/HQ_List"
+    <WebView
+        android:id="@+id/wv_jifen"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:divider="#ffffff"
-        android:dividerHeight="0dp"
-        android:scrollbars="none" >
-    </ListView>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

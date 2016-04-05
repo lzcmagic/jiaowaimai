@@ -31,7 +31,7 @@ public class A_main extends TabActivity implements OnCheckedChangeListener
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.a00_main);
- 
+
 		SQLiteStudioService.instance().start(getApplicationContext());
 
 		mTabHost = getTabHost();

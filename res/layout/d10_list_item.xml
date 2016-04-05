@@ -36,14 +36,15 @@
         android:layout_marginTop="5dp"
         android:background="#cccccc" />
 
-    <ListView
+    <TextView
         android:id="@+id/di03"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/view1"
         android:layout_marginLeft="66dp"
-        android:layout_marginTop="5dp" >
-    </ListView>
+        android:layout_marginTop="5dp"
+        android:ellipsize="marquee"
+        android:text="龙虾饭" />
 
     <LinearLayout
         android:id="@+id/layout1"

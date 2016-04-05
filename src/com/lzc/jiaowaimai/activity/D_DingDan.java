@@ -1,14 +1,19 @@
 package com.lzc.jiaowaimai.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
+import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,12 +29,46 @@ public class D_DingDan extends Activity
 	/** ¶©µ¥µÄListView */
 	private ListView mListView;
 
+	private List<ViewBean> OrderedList = new ArrayList<D_DingDan.ViewBean>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.d00_dingdan);
-		initView();
+		getData();
+	}
+
+	private void getData()
+	{
+		if (ApplWork.CurrentUser != null )
+		{
+			Cursor cursor = SQLiteDao.query(D_DingDan.this, "ordermeal_info",
+					ApplWork.CurrentUser.getPhone());
+			OrderedList = new ArrayList<ViewBean>();
+			if (cursor.moveToFirst() )
+			{
+				do
+				{
+					ViewBean bean = new ViewBean();
+					String restaurantname = cursor.getString(cursor.getColumnIndex("restaurantname"));
+					bean.setRestaurantname(restaurantname);
+					String mealname = cursor.getString(cursor.getColumnIndex("mealname"));
+					bean.setMealname(mealname);
+					String mealnum = cursor.getString(cursor.getColumnIndex("mealnum"));
+					bean.setMealnum(mealnum);
+					int mealmoney = cursor.getInt(cursor.getColumnIndex("mealmoney"));
+					bean.setMealmoney(String.valueOf(mealmoney));
+					OrderedList.add(bean);
+				} while (cursor.moveToNext());
+			}
+
+			if (!cursor.isClosed() )
+			{
+				cursor.close();
+			}
+			setContentView(R.layout.d00_dingdan);
+			initView();
+		}
 	}
 
 	private void initView()
@@ -45,19 +84,15 @@ public class D_DingDan extends Activity
 	{
 		private LayoutInflater mInflater;
 
-		@SuppressWarnings("unused")
-		private ListView contentListView;
-
 		public MyListAdapter(Context mContext)
 		{
 			this.mInflater = LayoutInflater.from(mContext);
-			contentListView = (ListView) findViewById(R.id.di03);
 		}
 
 		@Override
 		public int getCount()
 		{
-			return 5;
+			return OrderedList.size();
 		}
 
 		@Override
@@ -73,7 +108,7 @@ public class D_DingDan extends Activity
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent)
+		public View getView(int position, View convertView, android.view.ViewGroup parent)
 		{
 			ViewHoilder hold = null;
 			if (convertView == null )
@@ -84,7 +119,7 @@ public class D_DingDan extends Activity
 				hold.nameText = (TextView) convertView.findViewById(R.id.di02);
 				hold.numText = (TextView) convertView.findViewById(R.id.di04);
 				hold.moneyText = (TextView) convertView.findViewById(R.id.di05);
-				hold.contentList = (ListView) convertView.findViewById(R.id.di03);
+				hold.content = (TextView) convertView.findViewById(R.id.di03);
 				hold.againButton = (Button) findViewById(R.id.di06);
 				convertView.setTag(hold);
 			}
@@ -92,7 +127,11 @@ public class D_DingDan extends Activity
 			{
 				hold = (ViewHoilder) convertView.getTag();
 			}
-
+			hold.nameText.setText(OrderedList.get(position).getRestaurantname());
+			hold.numText.setText(OrderedList.get(position).getMealnum());
+			hold.moneyText.setText(String.valueOf(Integer.parseInt(OrderedList.get(position).getMealmoney())
+					* Integer.parseInt(OrderedList.get(position).getMealnum())));
+			hold.content.setText(OrderedList.get(position).getMealname());
 			return convertView;
 		}
 
@@ -104,7 +143,7 @@ public class D_DingDan extends Activity
 		public TextView nameText;
 		public TextView numText;
 		public TextView moneyText;
-		public ListView contentList;
+		public TextView content;
 		public Button againButton;
 	}
 
@@ -127,6 +166,55 @@ public class D_DingDan extends Activity
 		}
 
 		return super.onKeyDown(keyCode, event);
+	}
+
+	class ViewBean
+	{
+		String restaurantname;
+		String mealname;
+		String mealnum;
+		String mealmoney;
+
+		public String getRestaurantname()
+		{
+			return restaurantname;
+		}
+
+		public void setRestaurantname(String restaurantname)
+		{
+			this.restaurantname = restaurantname;
+		}
+
+		public String getMealname()
+		{
+			return mealname;
+		}
+
+		public void setMealname(String mealname)
+		{
+			this.mealname = mealname;
+		}
+
+		public String getMealnum()
+		{
+			return mealnum;
+		}
+
+		public void setMealnum(String mealnum)
+		{
+			this.mealnum = mealnum;
+		}
+
+		public String getMealmoney()
+		{
+			return mealmoney;
+		}
+
+		public void setMealmoney(String mealmoney)
+		{
+			this.mealmoney = mealmoney;
+		}
+
 	}
 
 }

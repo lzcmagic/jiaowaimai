@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 /** ±æµÿ ˝æ›±Ì */
 public class LocalSQLite extends SQLiteOpenHelper
 {
-	public static final int VERSION = 15;
+	public static final int VERSION = 21;
 	public static final String BD_NAME = "jiaowaimai.db";
 
 	private Context mContext;
@@ -38,11 +38,11 @@ public class LocalSQLite extends SQLiteOpenHelper
 		db.execSQL(
 				"create table redpackage_info(redpackageid text primary key,amount integer,type text,phone text,starttime text,endtime text);");
 		db.execSQL(
-				"create table ordermeal_info(mealid text primary key,restaurantname text,mealname text,mealnum integer,mealmoney integer,restaurantid text);");
+				"create table ordermeal_info(mealid text primary key,restaurantname text,mealname text,mealnum text,mealmoney integer,phone text,restaurantid text);");
 		db.execSQL(
-				"create table restaurant_info(restaurantid text primary key,resname text,resphone text,canguanpic bolb,restype text,respeisong integer,runspeed text,startrunmoney integer,sales text,score text,resaddressid text,menuid text);");
+				"create table restaurant_info(restaurantid text primary key,resname text,resphone text,canguanpic bolb,restype text,respeisong integer,runspeed text,startrunmoney integer,sales text,score text,resaddressid text);");
 		db.execSQL(
-				"create table menu_info (menuid text primary key,type1 text,type2 text,type3 text,type4 text,type5 text,type6 text,type7 text,type8 text,type9 text,type10 text,type11 text,type12 text,type13 text,type14 text,type15 text,type16 text,type17 text,type18 text,type19 text,type20 text);");
+				"create table menu_info (menuid text primary key,name text,price text,image bolb,restaurantid text);");
 		db.execSQL(
 				"create table resaddress_info(resaddressid text primary key,resprovince text,rescity text,rescountry text,resstreet text);");
 
@@ -142,6 +142,314 @@ public class LocalSQLite extends SQLiteOpenHelper
 	 */
 	private void initTable_Resaddress_Info(SQLiteDatabase db, Context context)
 	{
+
+	}
+
+	/**
+	 * ≥ı ºªØ≤Àµ•±Ìµƒ–≈œ¢
+	 * 
+	 * @param mContext2
+	 * @param db
+	 */
+	private void initTable_Menu_Info(SQLiteDatabase db, Context context)
+	{
+		ContentValues values = new ContentValues();
+		values.put("menuid", "6000");
+		values.put("name", "π“¬Øøæ—º");
+		values.put("price", "60");
+		Drawable drawable = context.getResources().getDrawable(R.drawable.gualu);
+		values.put("image", getPicture(drawable));
+		values.put("restaurantid", "10000");
+		db.insert("menu_info", null, values);
+
+		ContentValues values1 = new ContentValues();
+		values1.put("menuid", "6001");
+		values1.put("name", "ÏÀ¬Øøæ—º");
+		values1.put("price", "70");
+		Drawable drawable1 = context.getResources().getDrawable(R.drawable.menlu);
+		values1.put("image", getPicture(drawable1));
+		values1.put("restaurantid", "10000");
+		db.insert("menu_info", null, values1);
+
+		ContentValues values2 = new ContentValues();
+		values2.put("menuid", "6002");
+		values2.put("name", "Õ¡∂π≈£»‚∏«ΩΩ∑π");
+		values2.put("price", "12");
+		Drawable drawable2 = context.getResources().getDrawable(R.drawable.galiniurougaijiaofan);
+		values2.put("image", getPicture(drawable2));
+		values2.put("restaurantid", "10001");
+		db.insert("menu_info", null, values2);
+
+		ContentValues values3 = new ContentValues();
+		values3.put("menuid", "6003");
+		values3.put("name", "∑¨«—≥¥µ∞∏«ΩΩ∑π");
+		values3.put("price", "10");
+		Drawable drawable3 = context.getResources().getDrawable(R.drawable.fanqiechaodan);
+		values3.put("image", getPicture(drawable3));
+		values3.put("restaurantid", "10001");
+		db.insert("menu_info", null, values3);
+
+		ContentValues values4 = new ContentValues();
+		values4.put("menuid", "6004");
+		values4.put("name", "«‡Ω∑≥¥»‚∏«ΩΩ∑π");
+		values4.put("price", "12");
+		Drawable drawable4 = context.getResources().getDrawable(R.drawable.qingjiaorousigaijiaofan);
+		values4.put("image", getPicture(drawable4));
+		values4.put("restaurantid", "10001");
+		db.insert("menu_info", null, values4);
+
+		ContentValues values5 = new ContentValues();
+		values5.put("menuid", "6005");
+		values5.put("name", "–¬ΩÆ¥Û≈Ãº¶");
+		values5.put("price", "50");
+		Drawable drawable5 = context.getResources().getDrawable(R.drawable.dapanji);
+		values5.put("image", getPicture(drawable5));
+		values5.put("restaurantid", "10001");
+		db.insert("menu_info", null, values5);
+
+		ContentValues values6 = new ContentValues();
+		values6.put("menuid", "6006");
+		values6.put("name", " ÷◊•—Ú»‚");
+		values6.put("price", "30");
+		Drawable drawable6 = context.getResources().getDrawable(R.drawable.shouzhuayangrou);
+		values6.put("image", getPicture(drawable6));
+		values6.put("restaurantid", "10001");
+		db.insert("menu_info", null, values6);
+
+		ContentValues values7 = new ContentValues();
+		values7.put("menuid", "6007");
+		values7.put("name", "≈£»‚∑€ÀøÃ¿");
+		values7.put("price", "15");
+		Drawable drawable7 = context.getResources().getDrawable(R.drawable.niuroufensitang);
+		values7.put("image", getPicture(drawable7));
+		values7.put("restaurantid", "10001");
+		db.insert("menu_info", null, values7);
+
+		ContentValues values8 = new ContentValues();
+		values8.put("menuid", "6008");
+		values8.put("name", "øß‡¨≈£»‚≥¥∑π");
+		values8.put("price", "12");
+		Drawable drawable8 = context.getResources().getDrawable(R.drawable.niiurouchaofan);
+		values8.put("image", getPicture(drawable8));
+		values8.put("restaurantid", "10001");
+		db.insert("menu_info", null, values8);
+
+		ContentValues values9 = new ContentValues();
+		values9.put("menuid", "6009");
+		values9.put("name", "≈£»‚≈›ƒ§");
+		values9.put("price", "8");
+		Drawable drawable9 = context.getResources().getDrawable(R.drawable.paomo);
+		values9.put("image", getPicture(drawable9));
+		values9.put("restaurantid", "10001");
+		db.insert("menu_info", null, values9);
+
+		ContentValues values10 = new ContentValues();
+		values10.put("menuid", "6010");
+		values10.put("name", "≈£»‚∞Ë√Ê");
+		values10.put("price", "12");
+		Drawable drawable10 = context.getResources().getDrawable(R.drawable.niuroubanmian);
+		values10.put("image", getPicture(drawable10));
+		values10.put("restaurantid", "10001");
+		db.insert("menu_info", null, values10);
+
+		ContentValues values11 = new ContentValues();
+		values11.put("menuid", "6011");
+		values11.put("name", "—Ú»‚Ã¿");
+		values11.put("price", "20");
+		Drawable drawable11 = context.getResources().getDrawable(R.drawable.yangroutang);
+		values11.put("image", getPicture(drawable11));
+		values11.put("restaurantid", "10001");
+		db.insert("menu_info", null, values11);
+
+		ContentValues values12 = new ContentValues();
+		values12.put("menuid", "6012");
+		values12.put("name", "ª∆ÏÀº¶");
+		values12.put("price", "15");
+		Drawable drawable12 = context.getResources().getDrawable(R.drawable.huangmenji);
+		values12.put("image", getPicture(drawable12));
+		values12.put("restaurantid", "10003");
+		db.insert("menu_info", null, values12);
+
+		ContentValues values13 = new ContentValues();
+		values13.put("menuid", "6013");
+		values13.put("name", "ª∆ÏÀ≈≈π«");
+		values13.put("price", "18");
+		Drawable drawable13 = context.getResources().getDrawable(R.drawable.hangmenpaigu);
+		values13.put("image", getPicture(drawable13));
+		values13.put("restaurantid", "10003");
+		db.insert("menu_info", null, values13);
+
+		ContentValues values14 = new ContentValues();
+		values14.put("menuid", "6014");
+		values14.put("name", "∫Ï∏ª ø∆ªπ˚");
+		values14.put("price", "10/ΩÔ");
+		Drawable drawable14 = context.getResources().getDrawable(R.drawable.pingguo);
+		values14.put("image", getPicture(drawable14));
+		values14.put("restaurantid", "10005");
+		db.insert("menu_info", null, values14);
+
+		ContentValues values15 = new ContentValues();
+		values15.put("menuid", "6015");
+		values15.put("name", "√¢π˚");
+		values15.put("price", "12/ΩÔ");
+		Drawable drawable15 = context.getResources().getDrawable(R.drawable.manguo);
+		values15.put("image", getPicture(drawable15));
+		values15.put("restaurantid", "10005");
+		db.insert("menu_info", null, values15);
+
+		ContentValues values16 = new ContentValues();
+		values16.put("menuid", "6016");
+		values16.put("name", "Œ˜πœ");
+		values16.put("price", "5/ΩÔ");
+		Drawable drawable16 = context.getResources().getDrawable(R.drawable.xigua);
+		values16.put("image", getPicture(drawable16));
+		values16.put("restaurantid", "10005");
+		db.insert("menu_info", null, values16);
+
+		ContentValues values17 = new ContentValues();
+		values17.put("menuid", "6017");
+		values17.put("name", "≤››Æµ∞∏‚");
+		values17.put("price", "80/∏ˆ");
+		Drawable drawable17 = context.getResources().getDrawable(R.drawable.caomeidangao);
+		values17.put("image", getPicture(drawable17));
+		values17.put("restaurantid", "10006");
+		db.insert("menu_info", null, values17);
+
+		ContentValues values18 = new ContentValues();
+		values18.put("menuid", "6018");
+		values18.put("name", "√¢π˚µ∞∏‚");
+		values18.put("price", "100/∏ˆ");
+		Drawable drawable18 = context.getResources().getDrawable(R.drawable.manguodangao);
+		values18.put("image", getPicture(drawable18));
+		values18.put("restaurantid", "10006");
+		db.insert("menu_info", null, values18);
+
+		ContentValues values19 = new ContentValues();
+		values19.put("menuid", "6019");
+		values19.put("name", "±˘‰ø¡‹µ∞∏‚");
+		values19.put("price", "120/∏ˆ");
+		Drawable drawable19 = context.getResources().getDrawable(R.drawable.bingqiling);
+		values19.put("image", getPicture(drawable19));
+		values19.put("restaurantid", "10006");
+		db.insert("menu_info", null, values19);
+
+		ContentValues values20 = new ContentValues();
+		values20.put("menuid", "6020");
+		values20.put("name", "∏…±¥≈≈π«÷‡");
+		values20.put("price", "68/π¯");
+		Drawable drawable20 = context.getResources().getDrawable(R.drawable.ganbeipaigu);
+		values20.put("image", getPicture(drawable20));
+		values20.put("restaurantid", "10007");
+		db.insert("menu_info", null, values20);
+
+		ContentValues values21 = new ContentValues();
+		values21.put("menuid", "6021");
+		values21.put("name", "œ∫» …∞π¯÷‡");
+		values21.put("price", "58/π¯");
+		Drawable drawable21 = context.getResources().getDrawable(R.drawable.xiarenzhou);
+		values21.put("image", getPicture(drawable21));
+		values21.put("restaurantid", "10007");
+		db.insert("menu_info", null, values21);
+
+		ContentValues values22 = new ContentValues();
+		values22.put("menuid", "6022");
+		values22.put("name", "–∑ª∆…∞π¯÷‡");
+		values22.put("price", "98/π¯");
+		Drawable drawable22 = context.getResources().getDrawable(R.drawable.xiehuangzhou);
+		values22.put("image", getPicture(drawable22));
+		values22.put("restaurantid", "10007");
+		db.insert("menu_info", null, values22);
+
+		ContentValues values23 = new ContentValues();
+		values23.put("menuid", "6023");
+		values23.put("name", "¥‡∆§ ÷«πÕ»");
+		values23.put("price", "28");
+		Drawable drawable23 = context.getResources().getDrawable(R.drawable.cuipishouqiangtui);
+		values23.put("image", getPicture(drawable23));
+		values23.put("restaurantid", "10008");
+		db.insert("menu_info", null, values23);
+
+		ContentValues values24 = new ContentValues();
+		values24.put("menuid", "6024");
+		values24.put("name", "…Ó∫£˜®”„±§");
+		values24.put("price", "24");
+		Drawable drawable24 = context.getResources().getDrawable(R.drawable.xueyubao);
+		values24.put("image", getPicture(drawable24));
+		values24.put("restaurantid", "10008");
+		db.insert("menu_info", null, values24);
+
+		ContentValues values25 = new ContentValues();
+		values25.put("menuid", "6025");
+		values25.put("name", "÷• ø≈£≈≈∑π");
+		values25.put("price", "38");
+		Drawable drawable25 = context.getResources().getDrawable(R.drawable.zhishiniuroufan);
+		values25.put("image", getPicture(drawable25));
+		values25.put("restaurantid", "10008");
+		db.insert("menu_info", null, values25);
+
+		ContentValues values26 = new ContentValues();
+		values26.put("menuid", "60026");
+		values26.put("name", "Õ¡∂π≈£»‚∏«ΩΩ∑π");
+		values26.put("price", "12");
+		Drawable drawable26 = context.getResources().getDrawable(R.drawable.galiniurougaijiaofan);
+		values26.put("image", getPicture(drawable26));
+		values26.put("restaurantid", "10002");
+		db.insert("menu_info", null, values26);
+
+		ContentValues values27 = new ContentValues();
+		values27.put("menuid", "60027");
+		values27.put("name", "∑¨«—≥¥µ∞∏«ΩΩ∑π");
+		values27.put("price", "10");
+		Drawable drawable27 = context.getResources().getDrawable(R.drawable.fanqiechaodan);
+		values27.put("image", getPicture(drawable27));
+		values27.put("restaurantid", "10002");
+		db.insert("menu_info", null, values27);
+
+		ContentValues values28 = new ContentValues();
+		values28.put("menuid", "60028");
+		values28.put("name", "«‡Ω∑≥¥»‚∏«ΩΩ∑π");
+		values28.put("price", "12");
+		Drawable drawable28 = context.getResources().getDrawable(R.drawable.qingjiaorousigaijiaofan);
+		values28.put("image", getPicture(drawable28));
+		values28.put("restaurantid", "10002");
+		db.insert("menu_info", null, values28);
+
+		ContentValues values29 = new ContentValues();
+		values29.put("menuid", "60029");
+		values29.put("name", "Õ¡∂π≈£»‚∏«ΩΩ∑π");
+		values29.put("price", "12");
+		Drawable drawable29 = context.getResources().getDrawable(R.drawable.galiniurougaijiaofan);
+		values29.put("image", getPicture(drawable29));
+		values29.put("restaurantid", "10004");
+		db.insert("menu_info", null, values29);
+
+		ContentValues values30 = new ContentValues();
+		values30.put("menuid", "60030");
+		values30.put("name", "∑¨«—≥¥µ∞∏«ΩΩ∑π");
+		values30.put("price", "10");
+		Drawable drawable30 = context.getResources().getDrawable(R.drawable.fanqiechaodan);
+		values30.put("image", getPicture(drawable30));
+		values30.put("restaurantid", "10004");
+		db.insert("menu_info", null, values30);
+
+		ContentValues values31 = new ContentValues();
+		values31.put("menuid", "60031");
+		values31.put("name", "«‡Ω∑≥¥»‚∏«ΩΩ∑π");
+		values31.put("price", "12");
+		Drawable drawable31 = context.getResources().getDrawable(R.drawable.qingjiaorousigaijiaofan);
+		values31.put("image", getPicture(drawable31));
+		values31.put("restaurantid", "10004");
+		db.insert("menu_info", null, values31);
+	}
+
+	/**
+	 * ≥ı ºªØ≤Õπ›±Ìµƒ–≈œ¢
+	 * 
+	 * @param mContext2
+	 * @param db
+	 */
+	private void initTable_Restaurant_Info(SQLiteDatabase db, Context context)
+	{
 		ContentValues values = new ContentValues();
 		values.put("restaurantid", "10000");
 		values.put("resphone", "13915873770");
@@ -155,7 +463,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values.put("score", "0");
 		values.put("resaddressid", "20000");
 		values.put("respeisong", "5");
-		values.put("menuid", "30000");
 		db.insert("restaurant_info", null, values);
 
 		ContentValues values1 = new ContentValues();
@@ -171,7 +478,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values1.put("score", "0");
 		values1.put("respeisong", "3");
 		values1.put("resaddressid", "20001");
-		values1.put("menuid", "30001");
 		db.insert("restaurant_info", null, values1);
 
 		ContentValues values2 = new ContentValues();
@@ -187,7 +493,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values2.put("respeisong", "3");
 		values2.put("score", "0");
 		values2.put("resaddressid", "20002");
-		values2.put("menuid", "30002");
 		db.insert("restaurant_info", null, values2);
 
 		ContentValues values3 = new ContentValues();
@@ -203,7 +508,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values3.put("score", "0");
 		values3.put("respeisong", "2");
 		values3.put("resaddressid", "20003");
-		values3.put("menuid", "30003");
 		db.insert("restaurant_info", null, values3);
 
 		ContentValues values4 = new ContentValues();
@@ -219,7 +523,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values4.put("respeisong", "6");
 		values4.put("score", "0");
 		values4.put("resaddressid", "20004");
-		values4.put("menuid", "30004");
 		db.insert("restaurant_info", null, values4);
 
 		ContentValues values5 = new ContentValues();
@@ -235,7 +538,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values5.put("respeisong", "3");
 		values5.put("score", "5");
 		values5.put("resaddressid", "20005");
-		values5.put("menuid", "30005");
 		db.insert("restaurant_info", null, values5);
 
 		ContentValues values6 = new ContentValues();
@@ -251,7 +553,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values6.put("score", "0");
 		values6.put("respeisong", "6");
 		values6.put("resaddressid", "20006");
-		values6.put("menuid", "30006");
 		db.insert("restaurant_info", null, values6);
 
 		ContentValues values7 = new ContentValues();
@@ -267,7 +568,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values7.put("respeisong", "8");
 		values7.put("score", "0");
 		values7.put("resaddressid", "20007");
-		values7.put("menuid", "30007");
 		db.insert("restaurant_info", null, values7);
 
 		ContentValues values8 = new ContentValues();
@@ -283,31 +583,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		values8.put("score", "0");
 		values8.put("respeisong", "10");
 		values8.put("resaddressid", "20008");
-		values8.put("menuid", "30008");
 		db.insert("restaurant_info", null, values8);
-
-	}
-
-	/**
-	 * ≥ı ºªØ≤Àµ•±Ìµƒ–≈œ¢
-	 * 
-	 * @param mContext2
-	 * @param db
-	 */
-	private void initTable_Menu_Info(SQLiteDatabase db, Context mContext2)
-	{
-
-	}
-
-	/**
-	 * ≥ı ºªØ≤Õπ›±Ìµƒ–≈œ¢
-	 * 
-	 * @param mContext2
-	 * @param db
-	 */
-	private void initTable_Restaurant_Info(SQLiteDatabase db, Context mContext2)
-	{
-
 	}
 
 	/**
