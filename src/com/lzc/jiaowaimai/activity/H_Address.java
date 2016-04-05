@@ -103,6 +103,10 @@ public class H_Address extends Activity
 				AddressInfos.add(province + city + country + street);
 			} while (cursor.moveToNext());
 		}
+		if (!cursor.isClosed() )
+		{
+			cursor.close();
+		}
 	}
 
 	class ViewHolder

@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 /** 本地数据表 */
 public class LocalSQLite extends SQLiteOpenHelper
 {
-	public static final int VERSION = 10;
+	public static final int VERSION = 15;
 	public static final String BD_NAME = "jiaowaimai.db";
 
 	private Context mContext;
@@ -45,6 +45,8 @@ public class LocalSQLite extends SQLiteOpenHelper
 				"create table menu_info (menuid text primary key,type1 text,type2 text,type3 text,type4 text,type5 text,type6 text,type7 text,type8 text,type9 text,type10 text,type11 text,type12 text,type13 text,type14 text,type15 text,type16 text,type17 text,type18 text,type19 text,type20 text);");
 		db.execSQL(
 				"create table resaddress_info(resaddressid text primary key,resprovince text,rescity text,rescountry text,resstreet text);");
+
+		db.execSQL("create table food_album(albumid text primary key,image bolb,time text,phone text);");
 		initTable_Person_Info(db, mContext);
 		initTable_Address_Info(db, mContext);
 		initTable_Redpackage_Info(db, mContext);
@@ -52,6 +54,84 @@ public class LocalSQLite extends SQLiteOpenHelper
 		initTable_Restaurant_Info(db, mContext);
 		initTable_Menu_Info(db, mContext);
 		initTable_Resaddress_Info(db, mContext);
+		initTable_Food_Album(db, mContext);
+	}
+
+	/**
+	 * 将Drawable转换成可以用来存储的Byte[]类型
+	 * 
+	 * @param drawable
+	 * @return
+	 */
+	private byte[] getPicture(Drawable drawable)
+	{
+		if (drawable == null )
+		{
+			return null;
+		}
+		BitmapDrawable bd = (BitmapDrawable) drawable;
+		Bitmap bitmap = bd.getBitmap();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bitmap.compress(CompressFormat.PNG, 100, baos);
+		return baos.toByteArray();
+	}
+
+	/**
+	 * 初始化美食相册表
+	 * 
+	 * @param db
+	 * @param mContext2
+	 */
+	private void initTable_Food_Album(SQLiteDatabase db, Context context)
+	{
+		ContentValues values = new ContentValues();
+		values.put("albumid", "50000");
+		Drawable drawable = context.getResources().getDrawable(R.drawable.food1);
+		values.put("image", getPicture(drawable));
+		values.put("time", "2016-4-1 9:14");
+		values.put("phone", "13915873770");
+		db.insert("food_album", null, values);
+
+		ContentValues values1 = new ContentValues();
+		values1.put("albumid", "50001");
+		Drawable drawable1 = context.getResources().getDrawable(R.drawable.food2);
+		values1.put("image", getPicture(drawable1));
+		values1.put("time", "2016-4-2 9:14");
+		values1.put("phone", "13915873770");
+		db.insert("food_album", null, values1);
+
+		ContentValues values2 = new ContentValues();
+		values2.put("albumid", "50002");
+		Drawable drawable2 = context.getResources().getDrawable(R.drawable.food3);
+		values2.put("image", getPicture(drawable2));
+		values2.put("time", "2016-4-3 9:14");
+		values2.put("phone", "13915873770");
+		db.insert("food_album", null, values2);
+
+		ContentValues values3 = new ContentValues();
+		values3.put("albumid", "50003");
+		Drawable drawable3 = context.getResources().getDrawable(R.drawable.food4);
+		values3.put("image", getPicture(drawable3));
+		values3.put("time", "2016-4-4 9:14");
+		values3.put("phone", "13915873770");
+		db.insert("food_album", null, values3);
+
+		ContentValues values4 = new ContentValues();
+		values4.put("albumid", "50004");
+		Drawable drawable4 = context.getResources().getDrawable(R.drawable.food5);
+		values4.put("image", getPicture(drawable4));
+		values4.put("time", "2016-4-5 9:14");
+		values4.put("phone", "13915873770");
+		db.insert("food_album", null, values4);
+
+		ContentValues values5 = new ContentValues();
+		values5.put("albumid", "50005");
+		Drawable drawable5 = context.getResources().getDrawable(R.drawable.food6);
+		values5.put("image", getPicture(drawable5));
+		values5.put("time", "2016-4-6 9:14");
+		values5.put("phone", "13915873770");
+		db.insert("food_album", null, values5);
+
 	}
 
 	/**
@@ -209,25 +289,6 @@ public class LocalSQLite extends SQLiteOpenHelper
 	}
 
 	/**
-	 * 将Drawable转换成可以用来存储的Byte[]类型
-	 * 
-	 * @param drawable
-	 * @return
-	 */
-	private byte[] getPicture(Drawable drawable)
-	{
-		if (drawable == null )
-		{
-			return null;
-		}
-		BitmapDrawable bd = (BitmapDrawable) drawable;
-		Bitmap bitmap = bd.getBitmap();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmap.compress(CompressFormat.PNG, 100, baos);
-		return baos.toByteArray();
-	}
-
-	/**
 	 * 初始化菜单表的信息
 	 * 
 	 * @param mContext2
@@ -336,6 +397,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		db.execSQL("drop table if exists redpackage_info");
 		db.execSQL("drop table if exists address_info");
 		db.execSQL("drop table if exists person_info");
+		db.execSQL("drop table if exists food_album");
 		onCreate(db);
 	}
 

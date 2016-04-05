@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/layout_bg"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/foodimage"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/food1" />
+
+    <TextView
+        android:id="@+id/foodtime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="时间"
+        android:textColor="#777777"
+        android:textSize="12sp" />
+
+</LinearLayout>

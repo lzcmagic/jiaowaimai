@@ -41,12 +41,13 @@
         android:background="@drawable/layout_button"
         android:visibility="gone" >
 
-        <Button
+        <ImageView
             android:id="@+id/btn_insert"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/insert" />
+            android:contentDescription="@null"
+            android:src="@drawable/insert" />
     </RelativeLayout>
 
 </RelativeLayout>

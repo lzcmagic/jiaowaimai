@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebView.FindListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,18 +34,8 @@ public class Aa_Title extends Fragment
 			}
 		});
 		mTextView = (TextView) view.findViewById(R.id.tv_title);
-		insertLayout = (RelativeLayout) view.findViewById(R.id.layout_insert);
-		insertLayout.setOnClickListener(new OnClickListener()
-		{
 
-			@Override
-			public void onClick(View v)
-			{
-				Intent intent = new Intent();
-				intent.setClass(getActivity().getApplicationContext(), Ha_ListItem.class);
-				startActivity(intent);
-			}
-		});
+		insertLayout = (RelativeLayout) view.findViewById(R.id.layout_insert);
 		Activity activity = getActivity();
 		if (activity.getClass() == C_WaiMai.class )
 		{
@@ -106,7 +95,23 @@ public class Aa_Title extends Fragment
 		if (activity.getClass() == H_Address.class )
 		{
 			insertLayout.setVisibility(View.VISIBLE);
+			insertLayout.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					Intent intent = new Intent();
+					intent.setClass(getActivity().getApplicationContext(), Ha_ListItem.class);
+					startActivity(intent);
+				}
+			});
 			mTextView.setText("收货地址");
+			mLayout.setVisibility(View.VISIBLE);
+		}
+		if (activity.getClass() == J_FoodInfo.class )
+		{
+			mTextView.setText("美食相册");
 			mLayout.setVisibility(View.VISIBLE);
 		}
 
