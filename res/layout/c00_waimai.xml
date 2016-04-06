@@ -4,11 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <fragment
-        android:id="@+id/CF00"
-        android:name="com.lzc.jiaowaimai.activity.Aa_Title"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="#008DE1"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/c00_title"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:text="首页"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

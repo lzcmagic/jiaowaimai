@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.LocalSQLite;
 
@@ -73,6 +77,12 @@ public class C_WaiMai extends Activity
 	/** 参观的ListView */
 	private ListView mListView;
 
+	/** 地址信息显示的text */
+	private TextView c00_title;
+
+	/** 百度地图定位相关 */
+	public LocationClient mLocationClient = null;
+
 	/**
 	 * 处理UI线程中的图片自动轮播问题
 	 */
@@ -119,8 +129,34 @@ public class C_WaiMai extends Activity
 	@Override
 	protected void onResume()
 	{
+		c00_title = (TextView) findViewById(R.id.c00_title);
+		mLocationClient = new LocationClient(getApplicationContext());
+		LocationClientOption option = new LocationClientOption();
+		// 可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+		option.setIsNeedLocationDescribe(true);
+		// 可选，设置是否需要地址信息，默认不需要
+		option.setIsNeedAddress(true);
+		mLocationClient.setLocOption(option);
+		// 声明LocationClient类
+		// 注册监听函数
+		mLocationClient.registerLocationListener(new MyLocationListener());
+		mLocationClient.start();
 		initOtherViews();
 		super.onResume();
+	}
+
+	/** 百度地图定位接口 */
+	private class MyLocationListener implements BDLocationListener
+	{
+
+		@Override
+		public void onReceiveLocation(BDLocation location)
+		{
+			String str = location.getAddrStr().replaceFirst("中国", "");
+			String strDescribe = location.getLocationDescribe();
+			c00_title.setText(str + ":" + strDescribe);
+		}
+
 	}
 
 	/**
@@ -555,8 +591,7 @@ public class C_WaiMai extends Activity
 				@Override
 				public void onClick(View v)
 				{
-					Toast.makeText(getApplicationContext(), "" + newPosition + "aa", Toast.LENGTH_SHORT)
-							.show();
+					// TODO:放网页
 				}
 			});
 			mViewPager.addView(imageView);
