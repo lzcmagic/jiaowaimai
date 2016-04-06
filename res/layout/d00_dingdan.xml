@@ -20,4 +20,29 @@
         android:scrollbars="none" >
     </ListView>
 
+    <RelativeLayout
+        android:id="@+id/zanwudingdan"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/zanwu_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:src="@drawable/zanwudingdan" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/zanwu_iv"
+            android:layout_centerHorizontal="true"
+            android:text="暂无订单"
+            android:textColor="#777777"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
 </LinearLayout>

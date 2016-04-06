@@ -22,6 +22,18 @@ public class SQLiteDao
 		return cursor;
 	}
 
+	/** 查找餐馆 */
+	public static Cursor queryRestuanrant(Context context, String tableName, String resId)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getReadableDatabase();
+
+		Cursor cursor = db.rawQuery("select * from " + tableName + " where restaurantid = '" + resId + "'",
+				null);
+		return cursor;
+	}
+
+	/** 查找菜单 */
 	public static Cursor queryMenu(Context context, String resid)
 	{
 		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
@@ -108,6 +120,21 @@ public class SQLiteDao
 			phone
 		};
 		db.update("person_info", values, whereClause, whereArgs);
+	}
+
+	public static void updateSales(Context context, String restaurantid, String key, String value)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(key, value);
+
+		String whereClause = "restaurantid=?";
+		String[] whereArgs = new String[]
+		{
+			restaurantid
+		};
+		db.update("restaurant_info", values, whereClause, whereArgs);
 	}
 
 	/** 更新菜馆信息 */

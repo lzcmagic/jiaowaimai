@@ -124,6 +124,11 @@ public class Aa_Title extends Fragment
 			mTextView.setText("µÍ∆Ã");
 			mLayout.setVisibility(View.VISIBLE);
 		}
+		if (activity.getClass() == Cba_OrderDetels.class )
+		{
+			mTextView.setText("∂©≤Õ");
+			mLayout.setVisibility(View.VISIBLE);
+		}
 
 		return view;
 	}

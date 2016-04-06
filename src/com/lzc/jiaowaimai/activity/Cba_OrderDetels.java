@@ -9,6 +9,7 @@ import com.lzc.jiaowaimai.activity.utils.MyToast;
 import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -120,6 +121,19 @@ public class Cba_OrderDetels extends Activity
 						int price = Integer.parseInt(InfoArray[2].split("=")[1]);
 						System.out.println("" + num + "---" + price);
 						Ca_DisPlayPage.OrderMealMoneyList.add(num * price);
+						Cursor cursor = SQLiteDao.queryRestuanrant(Cba_OrderDetels.this, "restaurant_info",
+								InfoArray[3].split("=")[1]);
+						if (cursor.moveToFirst() )
+						{
+							String sales = cursor.getString(cursor.getColumnIndex("sales"));
+							int value = Integer.parseInt(sales) + 1;
+							SQLiteDao.updateSales(Cba_OrderDetels.this, InfoArray[3].split("=")[1], "sales",
+									String.valueOf(value));
+						}
+						if (!cursor.isClosed() )
+						{
+							cursor.close();
+						}
 						Cba_OrderDetels.this.finish();
 					}
 					else

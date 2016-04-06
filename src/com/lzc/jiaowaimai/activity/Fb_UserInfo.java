@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import com.lzc.jiaowaimai.R;
-import com.lzc.jiaowaimai.activity.bean.CurrentUser;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 import com.lzc.jiaowaimai.activity.utils.MyToast;
 import com.lzc.jiaowaimai.framework.ApplWork;
@@ -121,7 +120,9 @@ public class Fb_UserInfo extends Activity
 		@Override
 		public void onClick(View v)
 		{
-			ApplWork.CurrentUser = new CurrentUser();
+			ApplWork.CurrentUser = null;
+			Intent intent = new Intent("please_change_head_image");
+			sendBroadcast(intent);
 			Fb_UserInfo.this.finish();
 		}
 

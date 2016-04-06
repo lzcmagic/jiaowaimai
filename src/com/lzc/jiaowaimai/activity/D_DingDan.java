@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,13 +29,26 @@ public class D_DingDan extends Activity
 	/** 订单的ListView */
 	private ListView mListView;
 
+	private RelativeLayout zanwudingdan;
+
 	private List<ViewBean> OrderedList = new ArrayList<D_DingDan.ViewBean>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.d00_dingdan);
+		zanwudingdan = (RelativeLayout) findViewById(R.id.zanwudingdan);
+		mListView = (ListView) findViewById(R.id.DQ01);
+	}
+
+	@Override
+	protected void onResume()
+	{
 		getData();
+		MyListAdapter adapter = new MyListAdapter(getApplicationContext());
+		mListView.setAdapter(adapter);
+		super.onResume();
 	}
 
 	private void getData()
@@ -65,17 +79,14 @@ public class D_DingDan extends Activity
 			{
 				cursor.close();
 			}
-			setContentView(R.layout.d00_dingdan);
-			initView();
+			zanwudingdan.setVisibility(View.GONE);
+			mListView.setVisibility(View.VISIBLE);
 		}
-	}
-
-	private void initView()
-	{
-		mListView = (ListView) findViewById(R.id.DQ01);
-		MyListAdapter adapter = new MyListAdapter(getApplicationContext());
-		mListView.setAdapter(adapter);
-
+		else
+		{
+			zanwudingdan.setVisibility(View.VISIBLE);
+			mListView.setVisibility(View.GONE);
+		}
 	}
 
 	/** 自定义的Adapter */

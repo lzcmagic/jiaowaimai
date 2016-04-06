@@ -6,16 +6,19 @@ import java.util.List;
 
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
+import com.lzc.jiaowaimai.activity.view.RoundedImageView;
 import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +28,7 @@ public class F_XinXi extends Activity
 	/** 记录按下返回键的时间 */
 	private long exitTime = 0;
 
-	private ImageView tx_image;
+	private RoundedImageView tx_image;
 	private TextView username, userphone;
 	private LinearLayout InfoLayout;
 
@@ -47,10 +50,33 @@ public class F_XinXi extends Activity
 		setContentView(R.layout.f00_xinxi);
 	}
 
+	/** 动态注册广播 */
+	private class MyBroadCast extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			System.out.println("收到广播");
+			tx_image.setImageResource(R.drawable.ic_launcher);
+		}
+
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		unregisterReceiver(new MyBroadCast());
+		super.onDestroy();
+	}
+
 	@Override
 	protected void onResume()
 	{
 		initViews();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("please_change_head_image");
+		registerReceiver(new MyBroadCast(), filter);
 		super.onResume();
 	}
 
@@ -77,7 +103,7 @@ public class F_XinXi extends Activity
 			}
 		});
 
-		tx_image = (ImageView) findViewById(R.id.iv_touxiang);
+		tx_image = (RoundedImageView) findViewById(R.id.iv_touxiang);
 		username = (TextView) findViewById(R.id.tv_username);
 		userphone = (TextView) findViewById(R.id.tv_phone);
 

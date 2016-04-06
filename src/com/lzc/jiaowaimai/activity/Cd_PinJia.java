@@ -3,6 +3,7 @@ package com.lzc.jiaowaimai.activity;
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
 import com.lzc.jiaowaimai.activity.utils.MyToast;
+import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,10 +41,18 @@ public class Cd_PinJia extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				Ca_DisPlayPage parentActivity = (Ca_DisPlayPage) getActivity();
-				SQLiteDao.updateResScore(getActivity().getApplicationContext(), parentActivity.resid, "score",
-						String.valueOf(ratingBar.getRating()));
-				MyToast.show("评价成功！", getActivity().getApplicationContext());
+				if (ApplWork.CurrentUser != null )
+				{
+					Ca_DisPlayPage parentActivity = (Ca_DisPlayPage) getActivity();
+					SQLiteDao.updateResScore(getActivity().getApplicationContext(), parentActivity.resid,
+							"score", String.valueOf(ratingBar.getRating()));
+					MyToast.show("评价成功！", getActivity().getApplicationContext());
+
+				}
+				else
+				{
+					MyToast.show("请先登录！", getActivity().getApplicationContext());
+				}
 			}
 		});
 		return view;
