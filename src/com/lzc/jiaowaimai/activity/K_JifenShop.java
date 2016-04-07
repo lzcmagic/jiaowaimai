@@ -4,6 +4,7 @@ import com.lzc.jiaowaimai.R;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,6 +23,21 @@ public class K_JifenShop extends Activity
 		mWebView = (WebView) findViewById(R.id.wv_jifen);
 		mWebView.setBackgroundResource(R.drawable.ic_launcher);
 		init();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK )
+		{
+			if (mWebView.canGoBack() )
+			{
+				mWebView.goBack();// 返回上一页面
+				return true;
+			}
+		}
+
+		return super.onKeyDown(keyCode, event);
 	}
 
 	private void init()

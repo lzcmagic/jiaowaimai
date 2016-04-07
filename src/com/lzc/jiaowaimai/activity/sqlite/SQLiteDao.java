@@ -100,10 +100,17 @@ public class SQLiteDao
 		db.insert("food_album", null, values);
 	}
 
-	/** 删除 */
-	public static void delete()
+	/** 删除 地址信息 */
+	public static void delete(Context context, String addressId)
 	{
-
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+		String whereClause = "addressid=?";
+		String[] whereArgs =
+		{
+			addressId
+		};
+		db.delete("address_info", whereClause, whereArgs);
 	}
 
 	/** 修改 用户信息 */

@@ -79,8 +79,16 @@ public class D_DingDan extends Activity
 			{
 				cursor.close();
 			}
-			zanwudingdan.setVisibility(View.GONE);
-			mListView.setVisibility(View.VISIBLE);
+			if (OrderedList != null && OrderedList.size() > 0 )
+			{
+				zanwudingdan.setVisibility(View.GONE);
+				mListView.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				zanwudingdan.setVisibility(View.VISIBLE);
+				mListView.setVisibility(View.GONE);
+			}
 		}
 		else
 		{

@@ -3,6 +3,7 @@ package com.lzc.jiaowaimai.activity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
@@ -118,7 +119,15 @@ public class F_XinXi extends Activity
 		{
 			tx_image.setClickable(true);
 			tx_image.setImageBitmap(ApplWork.CurrentUser.getUserpic());
-			username.setText(ApplWork.CurrentUser.getUsername());
+			String name = ApplWork.CurrentUser.getUsername();
+			if (name != null && !"".equals(name) )
+			{
+				username.setText(name);
+			}
+			else
+			{
+				username.setText(UUID.randomUUID().toString().replace("-", "").substring(0, 8));
+			}
 			userphone.setText(ApplWork.CurrentUser.getPhone());
 		}
 
