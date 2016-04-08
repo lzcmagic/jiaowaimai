@@ -59,13 +59,31 @@ public class Jb_TakePhoto extends Activity
 			@Override
 			public void onClick(View v)
 			{
+				boolean fileIsExist = false;
 				String sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-				mOutputFile = new File(sdPath, System.currentTimeMillis() + ".tmp");
-				Uri uri = Uri.fromFile(mOutputFile);
-				System.out.println("uri" + uri);
-				Intent newIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				newIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-				startActivityForResult(newIntent, 1);
+				File file = new File(sdPath + "/jiaowaimaifoodpicture/");
+				if (!file.exists() )
+				{
+					fileIsExist = file.mkdir();
+				}
+				if (fileIsExist )
+				{
+					mOutputFile = new File(file, System.currentTimeMillis() + ".jpg");
+					Uri uri = Uri.fromFile(mOutputFile);
+					System.out.println("uri" + uri);
+					Intent newIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					newIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+					startActivityForResult(newIntent, 1);
+				}
+				else
+				{
+					mOutputFile = new File(sdPath, System.currentTimeMillis() + ".jpg");
+					Uri uri = Uri.fromFile(mOutputFile);
+					System.out.println("uri" + uri);
+					Intent newIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					newIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+					startActivityForResult(newIntent, 1);
+				}
 			}
 		});
 	}
