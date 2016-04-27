@@ -145,6 +145,13 @@ public class C_WaiMai extends Activity
 		super.onResume();
 	}
 
+	@Override
+	protected void onPause()
+	{
+		mLocationClient.stop();
+		super.onPause();
+	}
+
 	/** 百度地图定位接口 */
 	private class MyLocationListener implements BDLocationListener
 	{

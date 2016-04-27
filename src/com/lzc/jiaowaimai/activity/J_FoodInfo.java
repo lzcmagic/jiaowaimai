@@ -50,13 +50,13 @@ public class J_FoodInfo extends Activity
 	@Override
 	protected void onStart()
 	{
-		getData();
 		super.onStart();
 	}
 
 	@Override
 	protected void onResume()
 	{
+		getData();
 		mGridView = (GridView) findViewById(R.id.foodcollect);
 		mButton = (Button) findViewById(R.id.insert_image);
 		mGridView.setAdapter(new BaseAdapter()
