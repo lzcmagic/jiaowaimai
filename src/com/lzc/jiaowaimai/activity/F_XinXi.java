@@ -44,6 +44,8 @@ public class F_XinXi extends Activity
 
 	private LinearLayout hongbaolayout, addresslayout, CollectLayout, FoodLayout, jifenlayout, pinfenlayout;
 
+	private LinearLayout JineLayout;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -161,6 +163,19 @@ public class F_XinXi extends Activity
 			tv_JinE.setText("0.00");
 		}
 
+		JineLayout=(LinearLayout) findViewById(R.id.jinelayout);
+		JineLayout.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent=new Intent();
+				intent.setClass(F_XinXi.this, M_PayInsert.class);
+				startActivity(intent);
+			}
+		});
+		
 		hongbaolayout = (LinearLayout) findViewById(R.id.hongbaolayout);
 		hongbaolayout.setOnClickListener(new HongbaoLayoutOnclick());
 

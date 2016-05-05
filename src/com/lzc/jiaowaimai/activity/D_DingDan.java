@@ -5,15 +5,21 @@ import java.util.List;
 
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.SQLiteDao;
+import com.lzc.jiaowaimai.activity.utils.MyToast;
 import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -31,6 +37,8 @@ public class D_DingDan extends Activity
 
 	private RelativeLayout zanwudingdan;
 
+	private int Position;
+
 	private List<ViewBean> OrderedList = new ArrayList<D_DingDan.ViewBean>();
 
 	@Override
@@ -40,6 +48,50 @@ public class D_DingDan extends Activity
 		setContentView(R.layout.d00_dingdan);
 		zanwudingdan = (RelativeLayout) findViewById(R.id.zanwudingdan);
 		mListView = (ListView) findViewById(R.id.DQ01);
+		mListView.setOnItemClickListener(new OnItemClickListener()
+		{
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				Position = position;
+				AlertDialog.Builder builder = new AlertDialog.Builder(D_DingDan.this);
+				builder.setTitle("提示");
+				ViewBean bean = OrderedList.get(Position);
+				final String money = String
+						.valueOf(Integer.parseInt(bean.getMealmoney()) * Integer.parseInt(bean.getMealnum()));
+				builder.setMessage("确定下单后您将会支付本单需要的" + money + "元");
+				builder.setPositiveButton("确定", new OnClickListener()
+				{
+
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						int balance = ApplWork.CurrentUser.getBalance();
+						if (balance - Integer.parseInt(money) > 0 )
+						{
+							MyToast.show("支付成功", D_DingDan.this);
+							ApplWork.CurrentUser.setBalance(balance - Integer.parseInt(money));
+						}
+						else
+						{
+							MyToast.show("余额不足，支付失败", D_DingDan.this);
+						}
+					}
+				});
+				builder.setNegativeButton("取消", new OnClickListener()
+				{
+
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						dialog.dismiss();
+					}
+				});
+				builder.create();
+				builder.show();
+			}
+		});
 	}
 
 	@Override

@@ -171,6 +171,10 @@
             android:name="com.lzc.jiaowaimai.activity.L_PingfenInfo"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.lzc.jiaowaimai.activity.M_PayInsert"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
