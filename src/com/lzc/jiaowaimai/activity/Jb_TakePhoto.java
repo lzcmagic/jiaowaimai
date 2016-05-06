@@ -88,6 +88,7 @@ public class Jb_TakePhoto extends Activity
 			Bitmap bitMap = (Bitmap) data.getExtras().get("data");
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			bitMap.compress(CompressFormat.PNG, 100, baos);
+			imagView.setImageBitmap(bitMap);
 			int options = 100;
 			// 循环判断如果压缩后图片是否大于100kb,大于继续压缩
 			while (baos.toByteArray().length / 1024 > 100)
@@ -104,7 +105,6 @@ public class Jb_TakePhoto extends Activity
 			bitMapNew.compress(CompressFormat.PNG, 100, baos1);
 			layout.setVisibility(View.VISIBLE);
 			btn_take.setVisibility(View.GONE);
-			imagView.setImageBitmap(bitMapNew);
 			commit.setOnClickListener(new OnClickListener()
 			{
 

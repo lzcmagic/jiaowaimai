@@ -54,6 +54,7 @@ public class L_PingfenInfo extends Activity
 			@Override
 			public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser)
 			{
+
 				textview.setText(String.valueOf(rating));
 			}
 		});

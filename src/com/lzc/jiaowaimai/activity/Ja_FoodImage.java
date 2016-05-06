@@ -7,11 +7,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 public class Ja_FoodImage extends Activity
 {
@@ -21,6 +24,8 @@ public class Ja_FoodImage extends Activity
 
 	private Bitmap bitmap;
 
+	private DisplayMetrics metrics;
+
 	private Handler handler = new Handler()
 	{
 		public void handleMessage(android.os.Message msg)
@@ -29,6 +34,13 @@ public class Ja_FoodImage extends Activity
 			{
 				mImage.setVisibility(View.VISIBLE);
 				progressbar.setVisibility(View.GONE);
+
+				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+						metrics.widthPixels - 150, metrics.heightPixels - 400);
+				params.setMargins(80, 200, 80, 200);
+				mImage.setLayoutParams(params);
+				mImage.setAdjustViewBounds(true);
+				mImage.setScaleType(ScaleType.CENTER_CROP);
 				mImage.setImageBitmap(bitmap);
 			}
 		};
@@ -39,6 +51,9 @@ public class Ja_FoodImage extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// …Ë÷√∆¡ƒª≥ﬂ¥Á
+		metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		setContentView(R.layout.ja00_big_food);
 		byte[] array = getIntent().getByteArrayExtra("image");
 		bitmap = BitmapFactory.decodeByteArray(array, 0, array.length);
