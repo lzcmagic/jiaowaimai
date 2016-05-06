@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class J_FoodInfo extends Activity
@@ -39,24 +41,24 @@ public class J_FoodInfo extends Activity
 
 	private Button mButton;
 
+	/** »ñÈ¡ÆÁÄ»³ß´ç */
+	private DisplayMetrics DisplayMetrics;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.j00_foodcollect);
-	}
-
-	@Override
-	protected void onStart()
-	{
-		super.onStart();
+		// ³õÊ¼»¯ÆÁÄ»³ß´ç
+		DisplayMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(DisplayMetrics);
+		getData();
 	}
 
 	@Override
 	protected void onResume()
 	{
-		getData();
 		mGridView = (GridView) findViewById(R.id.foodcollect);
 		mButton = (Button) findViewById(R.id.insert_image);
 		mGridView.setAdapter(new BaseAdapter()
@@ -72,7 +74,13 @@ public class J_FoodInfo extends Activity
 				{
 					hold = new Viewholder();
 					convertView = LayoutInflater.from(J_FoodInfo.this).inflate(R.layout.ji00_listitem, null);
+
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+							(DisplayMetrics.widthPixels - 100) / 3, (DisplayMetrics.widthPixels - 250) / 3);
 					hold.imageView = (ImageView) convertView.findViewById(R.id.foodimage);
+					hold.imageView.setLayoutParams(params);
+					hold.imageView.setAdjustViewBounds(true);
+					hold.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 					hold.textView = (TextView) convertView.findViewById(R.id.foodtime);
 					convertView.setTag(hold);
 				}

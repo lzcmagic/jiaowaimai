@@ -206,13 +206,30 @@ public class FAa_Register extends Activity
 
 	public void showYanZhenDialog(boolean flag)
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(FAa_Register.this);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(FAa_Register.this);
 		builder.setTitle("ÑéÖ¤Âë");
 		randomText = (int) ((Math.random() * 9 + 1) * 100000);
 		builder.setMessage(String.valueOf(randomText));
 		if (flag )
 		{
 			builder.create().show();
+			CountDownTimer timer = new CountDownTimer(30000, 1000)
+			{
+
+				@Override
+				public void onTick(long millisUntilFinished)
+				{
+
+				}
+
+				@Override
+				public void onFinish()
+				{
+					builder.create().dismiss();
+				}
+
+			};
+			timer.start();
 		}
 		else
 		{

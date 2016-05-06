@@ -3,5 +3,6 @@
 
     <string name="app_name">叫外卖</string>
     <string name="hello_world">Hello world!</string>
+    <string name="c00_title">首页</string>
 
 </resources>

@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class M_PayInsert extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.m00_payinsert);
 	}
 
@@ -98,6 +100,11 @@ public class M_PayInsert extends Activity
 					@Override
 					public void onClick(DialogInterface dialog, int which)
 					{
+						if (money <= 0 )
+						{
+							MyToast.show("充值失败", M_PayInsert.this);
+							return;
+						}
 						ApplWork.CurrentUser.setBalance(money + ApplWork.CurrentUser.getBalance());
 						MyToast.show("充值成功！", M_PayInsert.this);
 						dialog.dismiss();

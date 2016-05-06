@@ -129,6 +129,11 @@ public class Aa_Title extends Fragment
 			mTextView.setText("∂©≤Õ");
 			mLayout.setVisibility(View.VISIBLE);
 		}
+		if (activity.getClass() == M_PayInsert.class )
+		{
+			mTextView.setText("≥‰÷µ");
+			mLayout.setVisibility(View.VISIBLE);
+		}
 
 		return view;
 	}

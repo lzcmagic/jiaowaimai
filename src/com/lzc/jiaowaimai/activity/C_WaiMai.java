@@ -186,7 +186,7 @@ public class C_WaiMai extends Activity
 				{
 					try
 					{
-						Thread.sleep(3000);
+						Thread.sleep(2000);
 						handler.sendEmptyMessage(1);
 					}
 					catch (InterruptedException e)
