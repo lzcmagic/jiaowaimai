@@ -2,9 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:background="#dddddd"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp" >
 
-    <ImageView
+    <com.lzc.jiaowaimai.activity.view.RoundedImageView
         android:id="@+id/index_iv"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -37,15 +42,6 @@
         android:layout_alignBaseline="@id/index_name"
         android:layout_toLeftOf="@id/qisong"
         android:text="15"
-        android:textColor="@android:color/holo_red_light"
-        android:textSize="16sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/index_name"
-        android:layout_toLeftOf="@id/tv_price"
-        android:text="¥"
         android:textColor="@android:color/holo_red_light"
         android:textSize="16sp" />
 
@@ -110,10 +106,5 @@
         android:text="¥2配送费"
         android:textSize="10sp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="#cccccc" />
 
 </RelativeLayout>

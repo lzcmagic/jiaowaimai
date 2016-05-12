@@ -11,6 +11,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.LocalSQLite;
+import com.lzc.jiaowaimai.activity.view.RoundedImageView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -123,6 +124,13 @@ public class C_WaiMai extends Activity
 	protected void onStop()
 	{
 		isStop = true;
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		mLocationClient.stop();
 		super.onDestroy();
 	}
 
@@ -410,8 +418,9 @@ public class C_WaiMai extends Activity
 				sqlList.add(show);
 			} while (cursor.moveToNext());
 		}
-		cursor.close();
 
+		cursor.close();
+		System.out.println("sqlList=" + sqlList);
 	}
 
 	/** listView点击事件 */
@@ -434,7 +443,7 @@ public class C_WaiMai extends Activity
 	class ViewHolder
 	{
 		/** 商户头像 */
-		ImageView tx_image;
+		RoundedImageView tx_image;
 		/** 商户名字 */
 		TextView name_text;
 		/** 商户起送价 */
@@ -447,8 +456,6 @@ public class C_WaiMai extends Activity
 		TextView fenshu_text;
 		/** 展示评分的RatingBar */
 		RatingBar mRatingBar;
-		/** 评分 */
-		TextView score;
 	}
 
 	/** 主页ListView的适配器 */
@@ -488,14 +495,13 @@ public class C_WaiMai extends Activity
 			{
 				holder = new ViewHolder();
 				convertView = mInflater.inflate(R.layout.index_list_view, null);
-				holder.tx_image = (ImageView) convertView.findViewById(R.id.index_iv);
+				holder.tx_image = (RoundedImageView) convertView.findViewById(R.id.index_iv);
 				holder.name_text = (TextView) convertView.findViewById(R.id.index_name);
 				holder.qisongjia_text = (TextView) convertView.findViewById(R.id.tv_price);
 				holder.peisongfei_text = (TextView) convertView.findViewById(R.id.tv_peisongfei);
 				holder.num_text = (TextView) convertView.findViewById(R.id.tv_danshu);
 				holder.fenshu_text = (TextView) convertView.findViewById(R.id.tv_fenshu);
 				holder.mRatingBar = (RatingBar) convertView.findViewById(R.id.ratingBar11);
-				holder.score = (TextView) convertView.findViewById(R.id.tv_fenshu);
 				convertView.setTag(holder);
 			}
 			else
@@ -504,13 +510,12 @@ public class C_WaiMai extends Activity
 			}
 			holder.tx_image.setImageBitmap(sqlList.get(position).getBitmap());
 			holder.name_text.setText(sqlList.get(position).getResname());
-			holder.qisongjia_text.setText(String.valueOf(sqlList.get(position).getStartrunmoney()));
+			holder.qisongjia_text.setText("¥" + String.valueOf(sqlList.get(position).getStartrunmoney()));
 			holder.peisongfei_text
 					.setText("¥" + String.valueOf(sqlList.get(position).getRespeisong()) + "配送费");
 			holder.num_text.setText(sqlList.get(position).getSales());
-			holder.fenshu_text.setText(sqlList.get(position).getScore());
+			holder.fenshu_text.setText(String.valueOf(sqlList.get(position).getScore()));
 			holder.mRatingBar.setRating(Float.parseFloat(sqlList.get(position).getScore()));
-			holder.score.setText(String.valueOf(sqlList.get(position).getScore()));
 			return convertView;
 		}
 

@@ -38,12 +38,13 @@ public class Fa_Login extends Activity
 		if (nfcAdapter == null )
 		{
 			Toast.makeText(this, "手机不支持NFC功能", Toast.LENGTH_SHORT).show();
-			return;
 		}
-		if (!nfcAdapter.isEnabled() )
+		else
 		{
-			Toast.makeText(this, "请先开通NFC功能", Toast.LENGTH_SHORT).show();
-			return;
+			if (!nfcAdapter.isEnabled() )
+			{
+				Toast.makeText(this, "请先开通NFC功能", Toast.LENGTH_SHORT).show();
+			}
 		}
 		initEditViews();
 		register = (Button) findViewById(R.id.register);
