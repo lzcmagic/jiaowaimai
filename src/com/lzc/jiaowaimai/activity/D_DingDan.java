@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -41,6 +42,8 @@ public class D_DingDan extends Activity
 
 	private List<ViewBean> OrderedList = new ArrayList<D_DingDan.ViewBean>();
 
+	private ArrayList<MessageItem> AddressInfos;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -52,7 +55,7 @@ public class D_DingDan extends Activity
 		{
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
 			{
 				Position = position;
 				AlertDialog.Builder builder = new AlertDialog.Builder(D_DingDan.this);
@@ -67,11 +70,88 @@ public class D_DingDan extends Activity
 					@Override
 					public void onClick(DialogInterface dialog, int which)
 					{
-						int balance = ApplWork.CurrentUser.getBalance();
+						final int balance = ApplWork.CurrentUser.getBalance();
 						if (balance - Integer.parseInt(money) > 0 )
 						{
-							MyToast.show("支付成功", D_DingDan.this);
-							ApplWork.CurrentUser.setBalance(balance - Integer.parseInt(money));
+							AlertDialog.Builder buld = new AlertDialog.Builder(D_DingDan.this);
+							buld.setTitle("选择地址：");
+							buld.setSingleChoiceItems(new BaseAdapter()
+							{
+
+								@Override
+								public View getView(int position, View convertView, ViewGroup parent)
+								{
+									ViewHolder hold;
+									if (convertView == null )
+									{
+										convertView = LayoutInflater.from(D_DingDan.this)
+												.inflate(R.layout.ha00_listitem, null);
+										hold = new ViewHolder(convertView);
+										convertView.setTag(hold);
+									}
+									else
+									{
+										hold = (ViewHolder) convertView.getTag();
+									}
+
+									if (ApplWork.CurrentUser.getUsername() != null )
+									{
+										hold.name.setText(ApplWork.CurrentUser.getUsername());
+									}
+									hold.phone.setText(ApplWork.CurrentUser.getPhone());
+									hold.address.setText(AddressInfos.get(position).address);
+									return convertView;
+								}
+
+								@Override
+								public long getItemId(int position)
+								{
+									return position;
+								}
+
+								@Override
+								public Object getItem(int position)
+								{
+									return position;
+								}
+
+								@Override
+								public int getCount()
+								{
+									return AddressInfos.size();
+								}
+							}, 0, new OnClickListener()
+							{
+
+								@Override
+								public void onClick(DialogInterface dialog, int which)
+								{
+
+								}
+							});
+
+							buld.setPositiveButton("确定", new OnClickListener()
+							{
+
+								@Override
+								public void onClick(DialogInterface dialog, int which)
+								{
+									MyToast.show("支付成功", D_DingDan.this);
+									ApplWork.CurrentUser.setBalance(balance - Integer.parseInt(money));
+									dialog.dismiss();
+								}
+							});
+
+							buld.setNegativeButton("取消", new OnClickListener()
+							{
+
+								@Override
+								public void onClick(DialogInterface dialog, int which)
+								{
+									dialog.dismiss();
+								}
+							});
+							buld.create().show();
 						}
 						else
 						{
@@ -98,6 +178,7 @@ public class D_DingDan extends Activity
 	protected void onResume()
 	{
 		getData();
+		getAddressData();
 		MyListAdapter adapter = new MyListAdapter(getApplicationContext());
 		mListView.setAdapter(adapter);
 		super.onResume();
@@ -283,6 +364,59 @@ public class D_DingDan extends Activity
 			this.mealmoney = mealmoney;
 		}
 
+	}
+
+	public class MessageItem
+	{
+		public String addressid;
+		public String address;
+	}
+
+	private void getAddressData()
+	{
+		if (ApplWork.CurrentUser != null )
+		{
+			AddressInfos = new ArrayList<D_DingDan.MessageItem>();
+			Cursor cursor = SQLiteDao.query(D_DingDan.this, "address_info", ApplWork.CurrentUser.getPhone());
+			if (cursor.moveToFirst() )
+			{
+				do
+				{
+					MessageItem item = new MessageItem();
+					String addressid = cursor.getString(cursor.getColumnIndex("addressid"));
+					String province = cursor.getString(cursor.getColumnIndex("province"));
+					String city = cursor.getString(cursor.getColumnIndex("city"));
+					String country = cursor.getString(cursor.getColumnIndex("country"));
+					String street = cursor.getString(cursor.getColumnIndex("street"));
+					item.addressid = addressid;
+					item.address = province + city + country + street;
+					AddressInfos.add(item);
+				} while (cursor.moveToNext());
+			}
+			if (!cursor.isClosed() )
+			{
+				cursor.close();
+			}
+		}
+		else
+		{
+			zanwudingdan.setVisibility(View.VISIBLE);
+			mListView.setVisibility(View.GONE);
+		}
+	}
+
+	private static class ViewHolder
+	{
+		public TextView name;
+		public TextView phone;
+		public TextView address;
+
+		ViewHolder(View view)
+		{
+			name = (TextView) view.findViewById(R.id.ha_name);
+			phone = (TextView) view.findViewById(R.id.ha_phone);
+			address = (TextView) view.findViewById(R.id.ha_address);
+		}
 	}
 
 }

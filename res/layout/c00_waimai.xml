@@ -93,8 +93,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/listview_bg"
-        android:divider="#00000000"
-        android:dividerHeight="10dp"
         android:padding="10dp"
         android:scrollbars="none" >
     </ListView>

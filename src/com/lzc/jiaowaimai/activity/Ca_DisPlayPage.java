@@ -159,7 +159,7 @@ public class Ca_DisPlayPage extends FragmentActivity
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("已选择"); // 设置标题
 		// builder.setMessage("是否确认退出?"); //设置内容
-		builder.setIcon(R.drawable.ic_launcher);// 设置图标，图片id即可
+		builder.setIcon(R.drawable.icon);// 设置图标，图片id即可
 		// 设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
 
 		List<String> list = new ArrayList<String>();

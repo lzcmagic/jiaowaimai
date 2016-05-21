@@ -145,7 +145,7 @@
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ddtb" />
 
         <TextView
             android:id="@+id/ca_jiesuan"
