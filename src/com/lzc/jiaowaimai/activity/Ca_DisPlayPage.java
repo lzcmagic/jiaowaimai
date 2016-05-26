@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.lzc.jiaowaimai.R;
+import com.lzc.jiaowaimai.activity.bean.CollectRes;
+import com.lzc.jiaowaimai.activity.utils.MyToast;
+import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -40,7 +43,7 @@ public class Ca_DisPlayPage extends FragmentActivity
 	// 店名，起送价，配送费，配餐速度
 	private TextView cal01, ca_qisong, ca_peisong, ca_runspeed;
 
-	private ImageView dingdanImage, touxaingImage;
+	private ImageView dingdanImage, touxaingImage, collectImage;
 
 	private String[] array = null;
 	private Bitmap bitmap;
@@ -48,10 +51,8 @@ public class Ca_DisPlayPage extends FragmentActivity
 	public String resname;
 
 	private TextView jiesuan;
-
-	public static List<Map<String, String>> OrderMealList = new ArrayList<Map<String, String>>();
-
-	public static List<Integer> OrderMealMoneyList = new ArrayList<Integer>();
+	/** 记录按下次数，奇数次为收藏，偶数次为未收藏 */
+	private int collectNum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -71,7 +72,7 @@ public class Ca_DisPlayPage extends FragmentActivity
 	{
 		jiesuan = (TextView) findViewById(R.id.ca_jiesuan);
 		int moneySum = 0;
-		for (int money : OrderMealMoneyList)
+		for (int money : ApplWork.OrderMealMoneyList)
 		{
 			moneySum = moneySum + money;
 		}
@@ -85,8 +86,14 @@ public class Ca_DisPlayPage extends FragmentActivity
 		resid = array[0].split("=")[1];
 		touxaingImage = (ImageView) findViewById(R.id.cap02);
 		touxaingImage.setImageBitmap(bitmap);
+		collectImage = (ImageView) findViewById(R.id.collectImage);
+		if (ApplWork.ResMap.containsKey(resid) )
+		{
+			collectNum = 1;
+			collectImage.setImageResource(R.drawable.collectt);
+		}
 
-		String[] newArray = array[1].split("=");
+		final String[] newArray = array[1].split("=");
 		cal01 = (TextView) findViewById(R.id.cal01);
 		cal01.setText(newArray[1]);
 
@@ -149,6 +156,45 @@ public class Ca_DisPlayPage extends FragmentActivity
 
 		mViewPager.setAdapter(new PagerFramentAdapter(getSupportFragmentManager()));
 		mViewPager.setOnPageChangeListener(new Ca_PagerChangeListener());
+
+		collectImage.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				collectNum++;
+				if (ApplWork.CurrentUser != null )
+				{
+					System.out.println("点击了收藏");
+					CollectRes res = new CollectRes();
+					res.setLogo(bitmap);
+					res.setName(newArray[1]);
+					res.setPeisong(array[3].split("=")[1]);
+					res.setQisong(array[2].split("=")[1]);
+					res.setResid(resid);
+					if (collectNum != 0 && collectNum % 2 != 0 )
+					{
+						// 已收藏状态->存储数据并更换图片
+						ApplWork.ResMap.put(resid, res);
+						collectImage.setImageResource(R.drawable.collectt);
+						MyToast.show("收藏成功", Ca_DisPlayPage.this);
+					}
+					else
+					{
+						ApplWork.ResMap.remove(resid);
+						collectImage.setImageResource(R.drawable.collect);
+						MyToast.show("取消收藏", Ca_DisPlayPage.this);
+					}
+				}
+				else
+				{
+					MyToast.show("请先登录！", Ca_DisPlayPage.this);
+				}
+
+			}
+		});
+
 	}
 
 	private void showDialog()
@@ -159,13 +205,11 @@ public class Ca_DisPlayPage extends FragmentActivity
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("已选择"); // 设置标题
 		// builder.setMessage("是否确认退出?"); //设置内容
-		builder.setIcon(R.drawable.icon);// 设置图标，图片id即可
-		// 设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
 
 		List<String> list = new ArrayList<String>();
-		for (int i = 0; i < OrderMealList.size(); i++)
+		for (int i = 0; i < ApplWork.OrderMealList.size(); i++)
 		{
-			Map<String, String> map = OrderMealList.get(i);
+			Map<String, String> map = ApplWork.OrderMealList.get(i);
 			Iterator<Entry<String, String>> iterator = map.entrySet().iterator();
 			while (iterator.hasNext())
 			{

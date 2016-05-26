@@ -116,11 +116,11 @@ public class Cba_OrderDetels extends Activity
 								ApplWork.CurrentUser.getPhone());
 						Map<String, String> map = new HashMap<String, String>();
 						map.put(InfoArray[1].split("=")[1], cba_num.getText().toString());
-						Ca_DisPlayPage.OrderMealList.add(map);
+						ApplWork.OrderMealList.add(map);
 						int num = Integer.parseInt(cba_num.getText().toString());
 						int price = Integer.parseInt(InfoArray[2].split("=")[1]);
 						System.out.println("" + num + "---" + price);
-						Ca_DisPlayPage.OrderMealMoneyList.add(num * price);
+						ApplWork.OrderMealMoneyList.add(num * price);
 						Cursor cursor = SQLiteDao.queryRestuanrant(Cba_OrderDetels.this, "restaurant_info",
 								InfoArray[3].split("=")[1]);
 						if (cursor.moveToFirst() )

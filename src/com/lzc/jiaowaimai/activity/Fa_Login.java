@@ -8,6 +8,7 @@ import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -92,6 +93,7 @@ public class Fa_Login extends Activity
 						String paypassword = cursor.getString(cursor.getColumnIndex("paypassword"));
 						ApplWork.CurrentUser.setPaypassword(paypassword);
 						MyToast.show("登录成功！", getApplicationContext());
+						saveLogin(phone, password);
 						Fa_Login.this.finish();
 					}
 					else
@@ -112,10 +114,24 @@ public class Fa_Login extends Activity
 		});
 	}
 
+	/** 保存登录信息 */
+	public void saveLogin(String username, String password)
+	{
+		SharedPreferences.Editor editor = getSharedPreferences("login", MODE_PRIVATE).edit();
+		editor.putString("username", username);
+		editor.putString("password", password);
+		editor.commit();
+	}
+
 	private void initEditViews()
 	{
+		SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
+		String user = pref.getString("username", "");
+		String pass = pref.getString("password", "");
 		username = (EditText) findViewById(R.id.username);
+		username.setText(user);
 		password = (EditText) findViewById(R.id.password);
+		password.setText(pass);
 	}
 
 	@Override

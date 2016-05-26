@@ -12,6 +12,7 @@ import com.baidu.location.LocationClientOption;
 import com.lzc.jiaowaimai.R;
 import com.lzc.jiaowaimai.activity.sqlite.LocalSQLite;
 import com.lzc.jiaowaimai.activity.view.RoundedImageView;
+import com.lzc.jiaowaimai.framework.ApplWork;
 
 import android.app.Activity;
 import android.content.Context;
@@ -137,6 +138,8 @@ public class C_WaiMai extends Activity
 	@Override
 	protected void onResume()
 	{
+		ApplWork.OrderMealList = new ArrayList<Map<String, String>>();
+		ApplWork.OrderMealMoneyList = new ArrayList<Integer>();
 		c00_title = (TextView) findViewById(R.id.c00_title);
 		mLocationClient = new LocationClient(getApplicationContext());
 		LocationClientOption option = new LocationClientOption();
@@ -420,7 +423,6 @@ public class C_WaiMai extends Activity
 		}
 
 		cursor.close();
-		System.out.println("sqlList=" + sqlList);
 	}
 
 	/** listView点击事件 */

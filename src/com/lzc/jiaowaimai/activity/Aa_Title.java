@@ -134,6 +134,16 @@ public class Aa_Title extends Fragment
 			mTextView.setText("充值");
 			mLayout.setVisibility(View.VISIBLE);
 		}
+		if (activity.getClass() == I_Collect.class )
+		{
+			mTextView.setText("收藏");
+			mLayout.setVisibility(View.VISIBLE);
+		}
+		if (activity.getClass() == K_JifenShop.class )
+		{
+			mTextView.setText("积分商城");
+			mLayout.setVisibility(View.VISIBLE);
+		}
 
 		return view;
 	}
