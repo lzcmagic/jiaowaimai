@@ -40,9 +40,11 @@ public class D_DingDan extends Activity
 
 	private int Position;
 
-	private List<ViewBean> OrderedList = new ArrayList<D_DingDan.ViewBean>();
+	private List<ViewBean> OrderedList = new ArrayList<ViewBean>();
 
 	private ArrayList<MessageItem> AddressInfos;
+
+	private MyListAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -51,16 +53,26 @@ public class D_DingDan extends Activity
 		setContentView(R.layout.d00_dingdan);
 		zanwudingdan = (RelativeLayout) findViewById(R.id.zanwudingdan);
 		mListView = (ListView) findViewById(R.id.DQ01);
+
+	}
+
+	@Override
+	protected void onResume()
+	{
+		getData();
+		getAddressData();
+		adapter = new MyListAdapter(getApplicationContext());
+		mListView.setAdapter(adapter);
 		mListView.setOnItemClickListener(new OnItemClickListener()
 		{
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
+			public void onItemClick(AdapterView<?> parent, final View view, final int position, long id)
 			{
 				Position = position;
 				AlertDialog.Builder builder = new AlertDialog.Builder(D_DingDan.this);
 				builder.setTitle("提示");
-				ViewBean bean = OrderedList.get(Position);
+				final ViewBean bean = OrderedList.get(Position);
 				final String money = String
 						.valueOf(Integer.parseInt(bean.getMealmoney()) * Integer.parseInt(bean.getMealnum()));
 				builder.setMessage("确定下单后您将会支付本单需要的" + money + "元");
@@ -136,8 +148,11 @@ public class D_DingDan extends Activity
 								@Override
 								public void onClick(DialogInterface dialog, int which)
 								{
-									MyToast.show("支付成功", D_DingDan.this);
 									ApplWork.CurrentUser.setBalance(balance - Integer.parseInt(money));
+									SQLiteDao.updateOrderMeal(D_DingDan.this, bean.mealid, 1);
+									OrderedList.remove(position);
+									adapter.notifyDataSetChanged();
+									MyToast.show("支付成功", D_DingDan.this);
 									dialog.dismiss();
 								}
 							});
@@ -172,23 +187,15 @@ public class D_DingDan extends Activity
 				builder.show();
 			}
 		});
-	}
-
-	@Override
-	protected void onResume()
-	{
-		getData();
-		getAddressData();
-		MyListAdapter adapter = new MyListAdapter(getApplicationContext());
-		mListView.setAdapter(adapter);
 		super.onResume();
 	}
 
+	/** 获取订单信息 */
 	private void getData()
 	{
 		if (ApplWork.CurrentUser != null )
 		{
-			Cursor cursor = SQLiteDao.query(D_DingDan.this, "ordermeal_info",
+			Cursor cursor = SQLiteDao.queryMenuDetail(D_DingDan.this, "ordermeal_info",
 					ApplWork.CurrentUser.getPhone());
 			OrderedList = new ArrayList<ViewBean>();
 			if (cursor.moveToFirst() )
@@ -196,6 +203,8 @@ public class D_DingDan extends Activity
 				do
 				{
 					ViewBean bean = new ViewBean();
+					String mealid = cursor.getString(cursor.getColumnIndex("mealid"));
+					bean.setMenuid(mealid);
 					String restaurantname = cursor.getString(cursor.getColumnIndex("restaurantname"));
 					bean.setRestaurantname(restaurantname);
 					String mealname = cursor.getString(cursor.getColumnIndex("mealname"));
@@ -319,10 +328,21 @@ public class D_DingDan extends Activity
 
 	class ViewBean
 	{
+		String mealid;
 		String restaurantname;
 		String mealname;
 		String mealnum;
 		String mealmoney;
+
+		public String getMenuid()
+		{
+			return mealid;
+		}
+
+		public void setMenuid(String menuid)
+		{
+			this.mealid = menuid;
+		}
 
 		public String getRestaurantname()
 		{
@@ -372,6 +392,7 @@ public class D_DingDan extends Activity
 		public String address;
 	}
 
+	/** 获取地址信息 */
 	private void getAddressData()
 	{
 		if (ApplWork.CurrentUser != null )

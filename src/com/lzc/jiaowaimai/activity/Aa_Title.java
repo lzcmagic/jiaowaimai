@@ -144,6 +144,11 @@ public class Aa_Title extends Fragment
 			mTextView.setText("积分商城");
 			mLayout.setVisibility(View.VISIBLE);
 		}
+		if (activity.getClass() == Jb_TakePhoto.class )
+		{
+			mTextView.setText("美食相册");
+			mLayout.setVisibility(View.VISIBLE);
+		}
 
 		return view;
 	}

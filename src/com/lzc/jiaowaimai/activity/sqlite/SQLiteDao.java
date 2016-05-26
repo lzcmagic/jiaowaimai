@@ -22,6 +22,21 @@ public class SQLiteDao
 		return cursor;
 	}
 
+	/**
+	 * 查找属于这个用户的对应订单信息的信息
+	 * 
+	 * @return
+	 */
+	public static Cursor queryMenuDetail(Context context, String tableName, String phone)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getReadableDatabase();
+
+		Cursor cursor = db.rawQuery(
+				"select * from " + tableName + " where phone = '" + phone + "'" + " and isOrdered='0'", null);
+		return cursor;
+	}
+
 	/** 查找餐馆 */
 	public static Cursor queryRestuanrant(Context context, String tableName, String resId)
 	{
@@ -67,6 +82,7 @@ public class SQLiteDao
 		values.put("mealnum", mealnum);
 		values.put("mealmoney", mealmoney);
 		values.put("phone", phone);
+		values.put("isOrdered", 0);
 		db.insert("ordermeal_info", null, values);
 	}
 
@@ -172,5 +188,26 @@ public class SQLiteDao
 			phone
 		};
 		db.update("person_info", values, whereClause, whereArgs);
+	}
+
+	/**
+	 * 修改订单情况
+	 * 
+	 * @param context
+	 * @param phone
+	 * @param bs
+	 */
+	public static void updateOrderMeal(Context context, String mealid, int isOrdered)
+	{
+		LocalSQLite sqLite = new LocalSQLite(context, LocalSQLite.BD_NAME, null, LocalSQLite.VERSION);
+		SQLiteDatabase db = sqLite.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("isOrdered", isOrdered);
+		String whereClause = "mealid=?";
+		String[] whereArgs = new String[]
+		{
+			mealid
+		};
+		db.update("ordermeal_info", values, whereClause, whereArgs);
 	}
 }

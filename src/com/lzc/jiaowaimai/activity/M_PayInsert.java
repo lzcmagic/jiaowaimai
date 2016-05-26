@@ -51,7 +51,6 @@ public class M_PayInsert extends Activity
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count)
 			{
-				System.out.println(s.toString() + "-----" + s);
 				if (s.toString().equals("12345678") )
 				{
 					money = 100;

@@ -73,7 +73,6 @@ public class E_FaXian extends Activity
 		});
 		// 优先使用缓存
 		mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-
 		// WebView加载web资源
 		mWebView.loadUrl("www.baidu.com");
 		// 启用支持javascript

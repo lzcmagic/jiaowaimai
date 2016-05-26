@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 /** 本地数据表 */
 public class LocalSQLite extends SQLiteOpenHelper
 {
-	public static final int VERSION = 21;
+	public static final int VERSION = 24;
 	public static final String BD_NAME = "jiaowaimai.db";
 
 	private Context mContext;
@@ -38,7 +38,7 @@ public class LocalSQLite extends SQLiteOpenHelper
 		db.execSQL(
 				"create table redpackage_info(redpackageid text primary key,amount integer,type text,phone text,starttime text,endtime text);");
 		db.execSQL(
-				"create table ordermeal_info(mealid text primary key,restaurantname text,mealname text,mealnum text,mealmoney integer,phone text,restaurantid text);");
+				"create table ordermeal_info(mealid text primary key,restaurantname text,mealname text,mealnum text,mealmoney integer,phone text,isOrdered integer,restaurantid text);");
 		db.execSQL(
 				"create table restaurant_info(restaurantid text primary key,resname text,resphone text,canguanpic bolb,restype text,respeisong integer,runspeed text,startrunmoney integer,sales text,score text,resaddressid text);");
 		db.execSQL(

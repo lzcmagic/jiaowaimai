@@ -53,12 +53,12 @@ public class J_FoodInfo extends Activity
 		// ³õÊ¼»¯ÆÁÄ»³ß´ç
 		DisplayMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(DisplayMetrics);
-		getData();
 	}
 
 	@Override
 	protected void onResume()
 	{
+		getData();
 		mGridView = (GridView) findViewById(R.id.foodcollect);
 		mButton = (Button) findViewById(R.id.insert_image);
 		mGridView.setAdapter(new BaseAdapter()
