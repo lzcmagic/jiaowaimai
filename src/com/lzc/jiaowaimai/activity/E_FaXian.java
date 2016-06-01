@@ -59,25 +59,22 @@ public class E_FaXian extends Activity
 
 	private void init()
 	{
+		// 优先使用缓存
+		mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+		// 启用支持javascript
+		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.getSettings().setDomStorageEnabled(true);
+		mWebView.loadUrl("http://www.baidu.com");
 		// 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
 		mWebView.setWebViewClient(new WebViewClient()
 		{
-
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url)
 			{
 				view.loadUrl(url);
 				return true;
 			}
-
 		});
-		// 优先使用缓存
-		mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-		// WebView加载web资源
-		mWebView.loadUrl("www.baidu.com");
-		// 启用支持javascript
-		WebSettings settings = mWebView.getSettings();
-		settings.setJavaScriptEnabled(true);
 
 	}
 }
